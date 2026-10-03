@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HANDOFF TRANSITION SCHEMA v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "task_id",
+    "seq",
+    "prior_state_hash",
+    "proposed_delta",
+    "validation",
+    "admission",
+    "resulting_state_hash",
+    "rendered_prose"
+  ],
+  "properties": {
+    "schema": {
+      "const": "openline.handoff-transition.v0.1"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "prior_state_hash": {
+      "type": "string",
+      "pattern": "^(0{64}|sha256:[0-9a-f]{64})$"
+    },
+    "proposed_delta": {
+      "type": "object"
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result",
+        "checks"
+      ],
+      "properties": {
+        "result": {
+          "enum": [
+            "accept",
+            "reject",
+            "quarantine"
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "check",
+              "pass"
+            ],
+            "properties": {
+              "check": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "pass": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "admission": {
+      "type": "object"
+    },
+    "resulting_state_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "rendered_prose": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "validation": {
+            "properties": {
+              "result": {
+                "const": "accept"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "admission": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "decision",
+              "by",
+              "at",
+              "evidence"
+            ],
+            "properties": {
+              "decision": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "by": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "at": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "evidence": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
