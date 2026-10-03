@@ -1,0 +1,1 @@
+{"errors":[{"raw":"Cara,xx,Rome","reason":"bad age","row":3},{"raw":"Dave,41","reason":"wrong column count","row":4},{"raw":"Eve,29,Berlin,extra","reason":"wrong column count","row":5}],"rows":[{"age":36,"city":"London","name":"Ada"},{"age":null,"city":"Paris","name":"Bob"}]}
