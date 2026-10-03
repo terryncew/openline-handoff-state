@@ -17,8 +17,13 @@ provider-replacement minimum, rejected fields, open questions).
 ## Layout
 
 - `HANDOFF_STATE_SCHEMA_v0.1.md` — the frozen schema (do not edit)
-- `schema-example.json` — machine-readable example (state + transition)
+- `schema-example-illustrative.json` — readable illustration of the
+  schema shape (NOT validator input; labeled as such)
+- `test-fixture-valid.json` — the valid fixture: real hashes, generated
+  prose, consistent delta (validator input; see DECISIONS.md)
 - `OPEN-QUESTIONS-FOR-CODEX.md` — unresolved design questions
+- `DECISIONS.md` — seed decisions (illustration vs fixture; exact
+  identity matching for v0.1)
 - `STAGE-1-TICKET.md` — the Codex work order for Stage 1
 - `handoff/` — Stage 1 implementation (JSONL append / validate / render)
 
