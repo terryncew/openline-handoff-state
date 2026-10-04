@@ -1,0 +1,18 @@
+name: REAL-HANDOFF-06 isolated verification
+on:
+  push:
+    branches: [codex/real-handoff-06-verify]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Frozen task acceptance
+        run: python -m unittest discover -s pilot/06-pctdecode/tests -v
+      - name: Existing Handoff State suite
+        run: python -m unittest discover -s handoff/tests -v
