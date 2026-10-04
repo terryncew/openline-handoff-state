@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Frozen task acceptance
-        run: python -m unittest discover -s pilot/06-pctdecode/tests -v
-      - name: Existing Handoff State suite
-        run: python -m unittest discover -s handoff/tests -v
+      - name: Read-only completion proposal preflight
+        run: python pilot/06-pctdecode/proposals/check_completion.py
