@@ -1,0 +1,25 @@
+{
+  "without_admission": "reject",
+  "without_admission_failed_checks": [
+    "explicit admitter",
+    "explicit admission decision",
+    "admitter matches authority_owner (exact)",
+    "action outside mandate",
+    "state change without evidence"
+  ],
+  "accepted_seq_before": 1,
+  "accepted_seq_after": 1,
+  "accepted_state_hash_before": "sha256:b8550eff064acad68baf1756565560ade1a69dc084b66690c9060a72e9b5364c",
+  "accepted_state_hash_after": "sha256:b8550eff064acad68baf1756565560ade1a69dc084b66690c9060a72e9b5364c",
+  "accepted_artifact_bytes_unchanged": true,
+  "hypothetical_exact_owner_preflight": "accept",
+  "hypothetical_failed_checks": [],
+  "hypothetical_candidate_hash": "sha256:d416b74032831324a795deab1e8d58b261c386197d60bcbb8953fe99c8958499",
+  "receipt_verification": "PASS",
+  "rejection_receipt_replay": "PASS",
+  "hypothetical_accepted_replay": "PASS",
+  "canonical_cli_without_admission_exit": 2,
+  "canonical_cli_hypothetical_exit": 0,
+  "proposal_file_sha256": "2e3db2af70c47bf56fffdf79a8b41b9f8a737ce1283682a95a37408145d1d246",
+  "no_actual_owner_admission": true
+}
