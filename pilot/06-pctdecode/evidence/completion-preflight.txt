@@ -1,0 +1,41 @@
+Source: https://github.com/terryncew/openline-handoff-state/actions/runs/37170863946/job/111343371589
+Preflight execution commit: 55ad16409726c65ceb4e0571f2d3ecf499991671
+Proposal content commit: aa77aa47f280190be808f84f11fb6c7c01c6a656
+Command: python pilot/06-pctdecode/proposals/check_completion.py
+Exit status: 0 (step conclusion: success)
+The hypothetical receipt was evaluated in memory only and never appended.
+This is a mechanical compatibility check, not authentication or owner admission.
+
+{
+  "accepted_hash_after": "sha256:398982ebfddaed95c2741ccedb1aa462c29fc642532403335854e6e89703814a",
+  "accepted_hash_before": "sha256:398982ebfddaed95c2741ccedb1aa462c29fc642532403335854e6e89703814a",
+  "accepted_sequence": 1,
+  "accepted_state_unchanged": true,
+  "actual_owner_admission_performed": false,
+  "canonical_terms_preserved_exactly": true,
+  "claim_ceiling_preserved_exactly": true,
+  "claims_preserved_exactly": true,
+  "frozen_invariants_preserved_exactly": true,
+  "historical_evidence_preserved": true,
+  "history_written": false,
+  "hypothetical_all_checks_pass": true,
+  "hypothetical_owner_preflight": "accept",
+  "hypothetical_receipt_verified": true,
+  "open_questions_preserved_exactly": true,
+  "pctdecode_successor_sha256": "8b22e6b3a814e6719d53bbbe9e2bd8ebc9fb44de296d164ff159c7d47b5030d1",
+  "protected_starting_artifacts_unchanged": true,
+  "starting_commit": "bc66ddbc4b6f8ed26c57e5df138cb1d0a634207d",
+  "stop_conditions_preserved_exactly": true,
+  "successor_changes_only": [
+    "pilot/06-pctdecode/pctdecode.py"
+  ],
+  "successor_commit": "05c2af845d224efcaf41eb5058e24d3595cc4633",
+  "unadmitted_failed_checks": [
+    "explicit admitter",
+    "explicit admission decision",
+    "admitter matches authority_owner (exact)",
+    "action outside mandate",
+    "state change without evidence"
+  ],
+  "unadmitted_result": "reject"
+}

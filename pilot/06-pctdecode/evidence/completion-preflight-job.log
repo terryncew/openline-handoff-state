@@ -1,0 +1,207 @@
+﻿2026-10-04T02:22:43.9108875Z Current runner version: '2.337.0'
+2026-10-04T02:22:43.9133220Z ##[group]Runner Image Provisioner
+2026-10-04T02:22:43.9134198Z Hosted Compute Agent
+2026-10-04T02:22:43.9134704Z Version: 20260901.588
+2026-10-04T02:22:43.9135344Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-04T02:22:43.9135989Z Build Date: 2026-09-01T19:56:44Z
+2026-10-04T02:22:43.9136563Z Worker ID: {cab92c04-3637-4205-bed6-341fbf4301c7}
+2026-10-04T02:22:43.9137241Z Azure Region: centralus
+2026-10-04T02:22:43.9137760Z ##[endgroup]
+2026-10-04T02:22:43.9139206Z ##[group]Operating System
+2026-10-04T02:22:43.9139731Z Ubuntu
+2026-10-04T02:22:43.9140146Z 24.04.5
+2026-10-04T02:22:43.9140639Z LTS
+2026-10-04T02:22:43.9141086Z ##[endgroup]
+2026-10-04T02:22:43.9141586Z ##[group]Runner Image
+2026-10-04T02:22:43.9142131Z Image: ubuntu-24.04
+2026-10-04T02:22:43.9142600Z Version: 20260927.320.1
+2026-10-04T02:22:43.9143906Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-04T02:22:43.9145297Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-04T02:22:43.9146176Z ##[endgroup]
+2026-10-04T02:22:43.9147177Z ##[group]GITHUB_TOKEN Permissions
+2026-10-04T02:22:43.9149123Z Contents: read
+2026-10-04T02:22:43.9149609Z Metadata: read
+2026-10-04T02:22:43.9150228Z ##[endgroup]
+2026-10-04T02:22:43.9152160Z Secret source: Actions
+2026-10-04T02:22:43.9153334Z Cache mode: write
+2026-10-04T02:22:43.9154170Z Prepare workflow directory
+2026-10-04T02:22:43.9365155Z Prepare all required actions
+2026-10-04T02:22:43.9397574Z Getting action download info
+2026-10-04T02:22:44.1611821Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-04T02:22:44.2566162Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-04T02:22:44.4284553Z Complete job name: verify
+2026-10-04T02:22:44.4743916Z ##[group]Run actions/checkout@v4
+2026-10-04T02:22:44.4744382Z with:
+2026-10-04T02:22:44.4744673Z   fetch-depth: 0
+2026-10-04T02:22:44.4744993Z   repository: terryncew/openline-handoff-state
+2026-10-04T02:22:44.4747066Z   token: ***
+2026-10-04T02:22:44.4747306Z   ssh-strict: true
+2026-10-04T02:22:44.4747550Z   ssh-user: git
+2026-10-04T02:22:44.4747799Z   persist-credentials: true
+2026-10-04T02:22:44.4748069Z   clean: true
+2026-10-04T02:22:44.4748320Z   sparse-checkout-cone-mode: true
+2026-10-04T02:22:44.4748610Z   fetch-tags: false
+2026-10-04T02:22:44.4748860Z   show-progress: true
+2026-10-04T02:22:44.4749111Z   lfs: false
+2026-10-04T02:22:44.4749342Z   submodules: false
+2026-10-04T02:22:44.4749595Z   set-safe-directory: true
+2026-10-04T02:22:44.4749876Z   allow-unsafe-pr-checkout: false
+2026-10-04T02:22:44.4750235Z ##[endgroup]
+2026-10-04T02:22:44.5441213Z Syncing repository: terryncew/openline-handoff-state
+2026-10-04T02:22:44.5442404Z ##[group]Getting Git version info
+2026-10-04T02:22:44.5442950Z Working directory is '/home/runner/work/openline-handoff-state/openline-handoff-state'
+2026-10-04T02:22:44.5443597Z [command]/usr/bin/git version
+2026-10-04T02:22:44.5539703Z git version 2.55.0
+2026-10-04T02:22:44.5553453Z ##[endgroup]
+2026-10-04T02:22:44.5565031Z Temporarily overriding HOME='/home/runner/work/_temp/efd9c048-6e2d-4e55-832f-1241b892ff5e' before making global git config changes
+2026-10-04T02:22:44.5566235Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-04T02:22:44.5569564Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/openline-handoff-state/openline-handoff-state
+2026-10-04T02:22:44.5616819Z Deleting the contents of '/home/runner/work/openline-handoff-state/openline-handoff-state'
+2026-10-04T02:22:44.5620004Z ##[group]Initializing the repository
+2026-10-04T02:22:44.5623979Z [command]/usr/bin/git init /home/runner/work/openline-handoff-state/openline-handoff-state
+2026-10-04T02:22:44.5736972Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-04T02:22:44.5738086Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-04T02:22:44.5738825Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-04T02:22:44.5739962Z hint: call:
+2026-10-04T02:22:44.5740315Z hint:
+2026-10-04T02:22:44.5740780Z hint: 	git config --global init.defaultBranch <name>
+2026-10-04T02:22:44.5741210Z hint:
+2026-10-04T02:22:44.5741699Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-04T02:22:44.5742324Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-04T02:22:44.5742798Z hint:
+2026-10-04T02:22:44.5743253Z hint: 	git branch -m <name>
+2026-10-04T02:22:44.5743663Z hint:
+2026-10-04T02:22:44.5744487Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-04T02:22:44.5745103Z Initialized empty Git repository in /home/runner/work/openline-handoff-state/openline-handoff-state/.git/
+2026-10-04T02:22:44.5756123Z [command]/usr/bin/git remote add origin https://github.com/terryncew/openline-handoff-state
+2026-10-04T02:22:44.5804618Z ##[endgroup]
+2026-10-04T02:22:44.5805348Z ##[group]Disabling automatic garbage collection
+2026-10-04T02:22:44.5807813Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-04T02:22:44.5839035Z ##[endgroup]
+2026-10-04T02:22:44.5839853Z ##[group]Setting up auth
+2026-10-04T02:22:44.5844169Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-04T02:22:44.5873797Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-04T02:22:44.6166893Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-04T02:22:44.6195075Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-04T02:22:44.6363423Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-04T02:22:44.6390115Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-04T02:22:44.6555210Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-04T02:22:44.6586592Z ##[endgroup]
+2026-10-04T02:22:44.6587182Z ##[group]Fetching the repository
+2026-10-04T02:22:44.6592786Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-10-04T02:22:45.1151389Z From https://github.com/terryncew/openline-handoff-state
+2026-10-04T02:22:45.1152957Z  * [new branch]      closeout/real-handoff-03 -> origin/closeout/real-handoff-03
+2026-10-04T02:22:45.1154162Z  * [new branch]      closeout/real-handoff-04 -> origin/closeout/real-handoff-04
+2026-10-04T02:22:45.1155122Z  * [new branch]      closeout/real-handoff-05R -> origin/closeout/real-handoff-05R
+2026-10-04T02:22:45.1156196Z  * [new branch]      codex/real-handoff-02-successor -> origin/codex/real-handoff-02-successor
+2026-10-04T02:22:45.1157417Z  * [new branch]      codex/real-handoff-03-completion-proposal -> origin/codex/real-handoff-03-completion-proposal
+2026-10-04T02:22:45.1158667Z  * [new branch]      codex/real-handoff-03-successor -> origin/codex/real-handoff-03-successor
+2026-10-04T02:22:45.1159838Z  * [new branch]      codex/real-handoff-03-validation -> origin/codex/real-handoff-03-validation
+2026-10-04T02:22:45.1161157Z  * [new branch]      codex/real-handoff-05-verify-20261004 -> origin/codex/real-handoff-05-verify-20261004
+2026-10-04T02:22:45.1162368Z  * [new branch]      codex/real-handoff-06-proposal -> origin/codex/real-handoff-06-proposal
+2026-10-04T02:22:45.1163508Z  * [new branch]      codex/real-handoff-06-successor -> origin/codex/real-handoff-06-successor
+2026-10-04T02:22:45.1165240Z  * [new branch]      codex/real-handoff-06-verify -> origin/codex/real-handoff-06-verify
+2026-10-04T02:22:45.1166149Z  * [new branch]      codex/stage1-jsonl     -> origin/codex/stage1-jsonl
+2026-10-04T02:22:45.1167364Z  * [new branch]      codex/verify-and-analyze-handoff-state-artifacts -> origin/codex/verify-and-analyze-handoff-state-artifacts
+2026-10-04T02:22:45.1168897Z  * [new branch]      codex/verify-and-manage-real-handoff-05r-process -> origin/codex/verify-and-manage-real-handoff-05r-process
+2026-10-04T02:22:45.1170222Z  * [new branch]      freeze/real-handoff-05 -> origin/freeze/real-handoff-05
+2026-10-04T02:22:45.1171062Z  * [new branch]      main                   -> origin/main
+2026-10-04T02:22:45.1171780Z  * [new branch]      pilot/handoff-02       -> origin/pilot/handoff-02
+2026-10-04T02:22:45.1172503Z  * [new branch]      pilot/handoff-03       -> origin/pilot/handoff-03
+2026-10-04T02:22:45.1173212Z  * [new branch]      pilot/handoff-04       -> origin/pilot/handoff-04
+2026-10-04T02:22:45.1174131Z  * [new branch]      pilot/handoff-05       -> origin/pilot/handoff-05
+2026-10-04T02:22:45.1175011Z  * [new branch]      pilot/handoff-05R      -> origin/pilot/handoff-05R
+2026-10-04T02:22:45.1175722Z  * [new branch]      pilot/handoff-06       -> origin/pilot/handoff-06
+2026-10-04T02:22:45.1177211Z [command]/usr/bin/git branch --list --remote origin/codex/real-handoff-06-verify
+2026-10-04T02:22:45.1190408Z   origin/codex/real-handoff-06-verify
+2026-10-04T02:22:45.1198031Z [command]/usr/bin/git rev-parse refs/remotes/origin/codex/real-handoff-06-verify
+2026-10-04T02:22:45.1219868Z 55ad16409726c65ceb4e0571f2d3ecf499991671
+2026-10-04T02:22:45.1222281Z ##[endgroup]
+2026-10-04T02:22:45.1222996Z ##[group]Determining the checkout info
+2026-10-04T02:22:45.1223943Z ##[endgroup]
+2026-10-04T02:22:45.1228285Z [command]/usr/bin/git sparse-checkout disable
+2026-10-04T02:22:45.1276163Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-04T02:22:45.1300761Z ##[group]Checking out the ref
+2026-10-04T02:22:45.1303232Z [command]/usr/bin/git checkout --progress --force -B codex/real-handoff-06-verify refs/remotes/origin/codex/real-handoff-06-verify
+2026-10-04T02:22:45.1384866Z Switched to a new branch 'codex/real-handoff-06-verify'
+2026-10-04T02:22:45.1389400Z branch 'codex/real-handoff-06-verify' set up to track 'origin/codex/real-handoff-06-verify'.
+2026-10-04T02:22:45.1393324Z ##[endgroup]
+2026-10-04T02:22:45.1427141Z [command]/usr/bin/git log -1 --format=%H
+2026-10-04T02:22:45.1448566Z 55ad16409726c65ceb4e0571f2d3ecf499991671
+2026-10-04T02:22:45.1633488Z ##[group]Run actions/setup-python@v5
+2026-10-04T02:22:45.1634023Z with:
+2026-10-04T02:22:45.1634301Z   python-version: 3.12
+2026-10-04T02:22:45.1634600Z   check-latest: false
+2026-10-04T02:22:45.1636674Z   token: ***
+2026-10-04T02:22:45.1636955Z   update-environment: true
+2026-10-04T02:22:45.1637280Z   allow-prereleases: false
+2026-10-04T02:22:45.1637596Z   freethreaded: false
+2026-10-04T02:22:45.1637889Z ##[endgroup]
+2026-10-04T02:22:45.2436584Z ##[group]Installed versions
+2026-10-04T02:22:45.2496380Z (node:2094) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-04T02:22:45.2497516Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-04T02:22:45.2498204Z Successfully set up CPython (3.12.14)
+2026-10-04T02:22:45.2498957Z ##[endgroup]
+2026-10-04T02:22:45.2655607Z ##[group]Run python pilot/06-pctdecode/proposals/check_completion.py
+2026-10-04T02:22:45.2656553Z [36;1mpython pilot/06-pctdecode/proposals/check_completion.py[0m
+2026-10-04T02:22:45.2915336Z shell: /usr/bin/bash -e {0}
+2026-10-04T02:22:45.2915743Z env:
+2026-10-04T02:22:45.2916064Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:22:45.2916537Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-04T02:22:45.2917003Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:22:45.2917415Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:22:45.2918050Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:22:45.2918472Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-04T02:22:45.2918840Z ##[endgroup]
+2026-10-04T02:22:45.3924410Z {
+2026-10-04T02:22:45.3924968Z   "accepted_hash_after": "sha256:398982ebfddaed95c2741ccedb1aa462c29fc642532403335854e6e89703814a",
+2026-10-04T02:22:45.3925657Z   "accepted_hash_before": "sha256:398982ebfddaed95c2741ccedb1aa462c29fc642532403335854e6e89703814a",
+2026-10-04T02:22:45.3926155Z   "accepted_sequence": 1,
+2026-10-04T02:22:45.3926445Z   "accepted_state_unchanged": true,
+2026-10-04T02:22:45.3926771Z   "actual_owner_admission_performed": false,
+2026-10-04T02:22:45.3927117Z   "canonical_terms_preserved_exactly": true,
+2026-10-04T02:22:45.3927453Z   "claim_ceiling_preserved_exactly": true,
+2026-10-04T02:22:45.3927780Z   "claims_preserved_exactly": true,
+2026-10-04T02:22:45.3928103Z   "frozen_invariants_preserved_exactly": true,
+2026-10-04T02:22:45.3928457Z   "historical_evidence_preserved": true,
+2026-10-04T02:22:45.3928773Z   "history_written": false,
+2026-10-04T02:22:45.3929064Z   "hypothetical_all_checks_pass": true,
+2026-10-04T02:22:45.3929391Z   "hypothetical_owner_preflight": "accept",
+2026-10-04T02:22:45.3929736Z   "hypothetical_receipt_verified": true,
+2026-10-04T02:22:45.3930074Z   "open_questions_preserved_exactly": true,
+2026-10-04T02:22:45.3930584Z   "pctdecode_successor_sha256": "8b22e6b3a814e6719d53bbbe9e2bd8ebc9fb44de296d164ff159c7d47b5030d1",
+2026-10-04T02:22:45.3931115Z   "protected_starting_artifacts_unchanged": true,
+2026-10-04T02:22:45.3931529Z   "starting_commit": "bc66ddbc4b6f8ed26c57e5df138cb1d0a634207d",
+2026-10-04T02:22:45.3931932Z   "stop_conditions_preserved_exactly": true,
+2026-10-04T02:22:45.3932261Z   "successor_changes_only": [
+2026-10-04T02:22:45.3932563Z     "pilot/06-pctdecode/pctdecode.py"
+2026-10-04T02:22:45.3932859Z   ],
+2026-10-04T02:22:45.3933159Z   "successor_commit": "05c2af845d224efcaf41eb5058e24d3595cc4633",
+2026-10-04T02:22:45.3933546Z   "unadmitted_failed_checks": [
+2026-10-04T02:22:45.3933979Z     "explicit admitter",
+2026-10-04T02:22:45.3934258Z     "explicit admission decision",
+2026-10-04T02:22:45.3934579Z     "admitter matches authority_owner (exact)",
+2026-10-04T02:22:45.3934909Z     "action outside mandate",
+2026-10-04T02:22:45.3935198Z     "state change without evidence"
+2026-10-04T02:22:45.3935480Z   ],
+2026-10-04T02:22:45.3935709Z   "unadmitted_result": "reject"
+2026-10-04T02:22:45.3935979Z }
+2026-10-04T02:22:45.4048512Z Post job cleanup.
+2026-10-04T02:22:45.4790479Z (node:2109) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-04T02:22:45.4791441Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-04T02:22:45.4939229Z Post job cleanup.
+2026-10-04T02:22:45.5486618Z [command]/usr/bin/git version
+2026-10-04T02:22:45.5515878Z git version 2.55.0
+2026-10-04T02:22:45.5558963Z Temporarily overriding HOME='/home/runner/work/_temp/c3522c3f-ef31-43d2-8a2a-6c1c51777236' before making global git config changes
+2026-10-04T02:22:45.5560283Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-04T02:22:45.5561433Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/openline-handoff-state/openline-handoff-state
+2026-10-04T02:22:45.5585526Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-04T02:22:45.5612675Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-04T02:22:45.5815195Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-04T02:22:45.5837931Z http.https://github.com/.extraheader
+2026-10-04T02:22:45.5847683Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-04T02:22:45.5877475Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-04T02:22:45.6066653Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-04T02:22:45.6098143Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-04T02:22:45.6379840Z Cleaning up orphan processes
+2026-10-04T02:22:45.6600029Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

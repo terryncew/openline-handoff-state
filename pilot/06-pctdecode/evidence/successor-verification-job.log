@@ -1,0 +1,211 @@
+﻿2026-10-04T02:18:16.4756076Z Current runner version: '2.337.0'
+2026-10-04T02:18:16.4776334Z ##[group]Runner Image Provisioner
+2026-10-04T02:18:16.4776929Z Hosted Compute Agent
+2026-10-04T02:18:16.4777352Z Version: 20260901.588
+2026-10-04T02:18:16.4777775Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-04T02:18:16.4778207Z Build Date: 2026-09-01T19:56:44Z
+2026-10-04T02:18:16.4778836Z Worker ID: {8ad32f93-2a8d-40b5-91c0-bcdc663efa78}
+2026-10-04T02:18:16.4779299Z Azure Region: westus3
+2026-10-04T02:18:16.4779687Z ##[endgroup]
+2026-10-04T02:18:16.4780613Z ##[group]Operating System
+2026-10-04T02:18:16.4780978Z Ubuntu
+2026-10-04T02:18:16.4781353Z 24.04.5
+2026-10-04T02:18:16.4781676Z LTS
+2026-10-04T02:18:16.4782018Z ##[endgroup]
+2026-10-04T02:18:16.4782402Z ##[group]Runner Image
+2026-10-04T02:18:16.4782771Z Image: ubuntu-24.04
+2026-10-04T02:18:16.4783186Z Version: 20260927.320.1
+2026-10-04T02:18:16.4783949Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-04T02:18:16.4784974Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-04T02:18:16.4785547Z ##[endgroup]
+2026-10-04T02:18:16.4786274Z ##[group]GITHUB_TOKEN Permissions
+2026-10-04T02:18:16.4787685Z Contents: read
+2026-10-04T02:18:16.4788133Z Metadata: read
+2026-10-04T02:18:16.4788594Z ##[endgroup]
+2026-10-04T02:18:16.4790396Z Secret source: Actions
+2026-10-04T02:18:16.4790962Z Cache mode: write
+2026-10-04T02:18:16.4791482Z Prepare workflow directory
+2026-10-04T02:18:16.5008103Z Prepare all required actions
+2026-10-04T02:18:16.5041317Z Getting action download info
+2026-10-04T02:18:16.8393805Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-04T02:18:17.0278972Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-04T02:18:17.3553751Z Complete job name: verify
+2026-10-04T02:18:17.4056939Z ##[group]Run actions/checkout@v4
+2026-10-04T02:18:17.4057389Z with:
+2026-10-04T02:18:17.4057689Z   repository: terryncew/openline-handoff-state
+2026-10-04T02:18:17.4060235Z   token: ***
+2026-10-04T02:18:17.4060481Z   ssh-strict: true
+2026-10-04T02:18:17.4060730Z   ssh-user: git
+2026-10-04T02:18:17.4060990Z   persist-credentials: true
+2026-10-04T02:18:17.4061267Z   clean: true
+2026-10-04T02:18:17.4061525Z   sparse-checkout-cone-mode: true
+2026-10-04T02:18:17.4061818Z   fetch-depth: 1
+2026-10-04T02:18:17.4062065Z   fetch-tags: false
+2026-10-04T02:18:17.4062318Z   show-progress: true
+2026-10-04T02:18:17.4062567Z   lfs: false
+2026-10-04T02:18:17.4062799Z   submodules: false
+2026-10-04T02:18:17.4063058Z   set-safe-directory: true
+2026-10-04T02:18:17.4063348Z   allow-unsafe-pr-checkout: false
+2026-10-04T02:18:17.4063716Z ##[endgroup]
+2026-10-04T02:18:17.4813759Z Syncing repository: terryncew/openline-handoff-state
+2026-10-04T02:18:17.4815119Z ##[group]Getting Git version info
+2026-10-04T02:18:17.4815702Z Working directory is '/home/runner/work/openline-handoff-state/openline-handoff-state'
+2026-10-04T02:18:17.4816367Z [command]/usr/bin/git version
+2026-10-04T02:18:17.4868006Z git version 2.55.0
+2026-10-04T02:18:17.4885065Z ##[endgroup]
+2026-10-04T02:18:17.4896237Z Temporarily overriding HOME='/home/runner/work/_temp/806f91de-a86c-49e9-8cdf-9674d11bb1ac' before making global git config changes
+2026-10-04T02:18:17.4897614Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-04T02:18:17.4900822Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/openline-handoff-state/openline-handoff-state
+2026-10-04T02:18:17.5530709Z Deleting the contents of '/home/runner/work/openline-handoff-state/openline-handoff-state'
+2026-10-04T02:18:17.5535609Z ##[group]Initializing the repository
+2026-10-04T02:18:17.5540626Z [command]/usr/bin/git init /home/runner/work/openline-handoff-state/openline-handoff-state
+2026-10-04T02:18:17.5825728Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-04T02:18:17.5827651Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-04T02:18:17.5829055Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-04T02:18:17.5829811Z hint: call:
+2026-10-04T02:18:17.5830264Z hint:
+2026-10-04T02:18:17.5830788Z hint: 	git config --global init.defaultBranch <name>
+2026-10-04T02:18:17.5831421Z hint:
+2026-10-04T02:18:17.5832006Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-04T02:18:17.5832962Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-04T02:18:17.5833707Z hint:
+2026-10-04T02:18:17.5834167Z hint: 	git branch -m <name>
+2026-10-04T02:18:17.5834672Z hint:
+2026-10-04T02:18:17.5835326Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-04T02:18:17.5836637Z Initialized empty Git repository in /home/runner/work/openline-handoff-state/openline-handoff-state/.git/
+2026-10-04T02:18:17.5838908Z [command]/usr/bin/git remote add origin https://github.com/terryncew/openline-handoff-state
+2026-10-04T02:18:17.5912530Z ##[endgroup]
+2026-10-04T02:18:17.5913227Z ##[group]Disabling automatic garbage collection
+2026-10-04T02:18:17.5916139Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-04T02:18:17.6124735Z ##[endgroup]
+2026-10-04T02:18:17.6125216Z ##[group]Setting up auth
+2026-10-04T02:18:17.6130513Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-04T02:18:17.6164466Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-04T02:18:17.6449638Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-04T02:18:17.6481666Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-04T02:18:17.6680714Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-04T02:18:17.6721270Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-04T02:18:17.6927621Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-04T02:18:17.7427364Z ##[endgroup]
+2026-10-04T02:18:17.7428140Z ##[group]Fetching the repository
+2026-10-04T02:18:17.7436583Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fb762bc9641808ea8cbe2a7180d62083b4f22b5e:refs/remotes/origin/codex/real-handoff-06-verify
+2026-10-04T02:18:18.2689230Z From https://github.com/terryncew/openline-handoff-state
+2026-10-04T02:18:18.2690751Z  * [new ref]         fb762bc9641808ea8cbe2a7180d62083b4f22b5e -> origin/codex/real-handoff-06-verify
+2026-10-04T02:18:18.2693508Z ##[endgroup]
+2026-10-04T02:18:18.2694446Z ##[group]Determining the checkout info
+2026-10-04T02:18:18.2695987Z ##[endgroup]
+2026-10-04T02:18:18.2700367Z [command]/usr/bin/git sparse-checkout disable
+2026-10-04T02:18:18.2938219Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-04T02:18:18.3021751Z ##[group]Checking out the ref
+2026-10-04T02:18:18.3025131Z [command]/usr/bin/git checkout --progress --force -B codex/real-handoff-06-verify refs/remotes/origin/codex/real-handoff-06-verify
+2026-10-04T02:18:18.4122425Z Switched to a new branch 'codex/real-handoff-06-verify'
+2026-10-04T02:18:18.4128043Z branch 'codex/real-handoff-06-verify' set up to track 'origin/codex/real-handoff-06-verify'.
+2026-10-04T02:18:18.4131634Z ##[endgroup]
+2026-10-04T02:18:18.4171518Z [command]/usr/bin/git log -1 --format=%H
+2026-10-04T02:18:18.4195168Z fb762bc9641808ea8cbe2a7180d62083b4f22b5e
+2026-10-04T02:18:18.4467944Z ##[group]Run actions/setup-python@v5
+2026-10-04T02:18:18.4468888Z with:
+2026-10-04T02:18:18.4469667Z   python-version: 3.12
+2026-10-04T02:18:18.4470367Z   check-latest: false
+2026-10-04T02:18:18.4476781Z   token: ***
+2026-10-04T02:18:18.4477425Z   update-environment: true
+2026-10-04T02:18:18.4478151Z   allow-prereleases: false
+2026-10-04T02:18:18.4478918Z   freethreaded: false
+2026-10-04T02:18:18.4479539Z ##[endgroup]
+2026-10-04T02:18:18.5378787Z ##[group]Installed versions
+2026-10-04T02:18:18.5432639Z (node:2076) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-04T02:18:18.5435293Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-04T02:18:18.5436867Z Successfully set up CPython (3.12.14)
+2026-10-04T02:18:18.5438726Z ##[endgroup]
+2026-10-04T02:18:18.5618003Z ##[group]Run python -m unittest discover -s pilot/06-pctdecode/tests -v
+2026-10-04T02:18:18.5620357Z [36;1mpython -m unittest discover -s pilot/06-pctdecode/tests -v[0m
+2026-10-04T02:18:18.5927008Z shell: /usr/bin/bash -e {0}
+2026-10-04T02:18:18.5927884Z env:
+2026-10-04T02:18:18.5928871Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:18:18.5930054Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-04T02:18:18.5931220Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:18:18.5932273Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:18:18.5933339Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:18:18.5934390Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-04T02:18:18.5935292Z ##[endgroup]
+2026-10-04T02:18:19.2110040Z test_basic (test_pctdecode.PctDecodeTest.test_basic) ... ok
+2026-10-04T02:18:19.2201231Z test_empty (test_pctdecode.PctDecodeTest.test_empty) ... ok
+2026-10-04T02:18:19.2291661Z test_lone_percent_end (test_pctdecode.PctDecodeTest.test_lone_percent_end) ... ok
+2026-10-04T02:18:19.2382523Z test_lowercase_hex (test_pctdecode.PctDecodeTest.test_lowercase_hex) ... ok
+2026-10-04T02:18:19.2479430Z test_malformed_left_literal (test_pctdecode.PctDecodeTest.test_malformed_left_literal) ... ok
+2026-10-04T02:18:19.2570412Z test_no_escapes (test_pctdecode.PctDecodeTest.test_no_escapes) ... ok
+2026-10-04T02:18:19.2570949Z 
+2026-10-04T02:18:19.2571172Z ----------------------------------------------------------------------
+2026-10-04T02:18:19.2571475Z Ran 6 tests in 0.056s
+2026-10-04T02:18:19.2571581Z 
+2026-10-04T02:18:19.2571667Z OK
+2026-10-04T02:18:19.2805033Z ##[group]Run python -m unittest discover -s handoff/tests -v
+2026-10-04T02:18:19.2805353Z [36;1mpython -m unittest discover -s handoff/tests -v[0m
+2026-10-04T02:18:19.2861547Z shell: /usr/bin/bash -e {0}
+2026-10-04T02:18:19.2861749Z env:
+2026-10-04T02:18:19.2861979Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:18:19.2862264Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-04T02:18:19.2862550Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:18:19.2862811Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:18:19.2863084Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-04T02:18:19.2863341Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-04T02:18:19.2863559Z ##[endgroup]
+2026-10-04T02:18:19.4204362Z test_candidate_cannot_appoint_its_own_authority (test_handoff.HandoffTests.test_candidate_cannot_appoint_its_own_authority) ... ok
+2026-10-04T02:18:19.4219894Z test_contradiction_quarantined_without_reconciliation (test_handoff.HandoffTests.test_contradiction_quarantined_without_reconciliation) ... ok
+2026-10-04T02:18:19.4231502Z test_exact_sha_path_status_round_trip_and_determinism (test_handoff.HandoffTests.test_exact_sha_path_status_round_trip_and_determinism) ... ok
+2026-10-04T02:18:19.4248701Z test_frozen_modification_rejected (test_handoff.HandoffTests.test_frozen_modification_rejected) ... ok
+2026-10-04T02:18:19.4252486Z test_frozen_schema_unchanged (test_handoff.HandoffTests.test_frozen_schema_unchanged) ... ok
+2026-10-04T02:18:19.4289190Z test_missing_admitter_cannot_default_to_agent (test_handoff.HandoffTests.test_missing_admitter_cannot_default_to_agent) ... ok
+2026-10-04T02:18:19.4304027Z test_negative_result_and_uncertainty_survive_unrelated_delta (test_handoff.HandoffTests.test_negative_result_and_uncertainty_survive_unrelated_delta) ... ok
+2026-10-04T02:18:19.4315232Z test_new_term_with_explicit_owner_admission_accepted (test_handoff.HandoffTests.test_new_term_with_explicit_owner_admission_accepted) ... ok
+2026-10-04T02:18:19.4329833Z test_new_term_without_admission_rejected_and_retained (test_handoff.HandoffTests.test_new_term_without_admission_rejected_and_retained) ... ok
+2026-10-04T02:18:19.4349339Z test_open_to_fact_without_evidence_rejected (test_handoff.HandoffTests.test_open_to_fact_without_evidence_rejected) ... ok
+2026-10-04T02:18:19.4426743Z test_other_named_validator_checks (test_handoff.HandoffTests.test_other_named_validator_checks) ... ok
+2026-10-04T02:18:19.4475843Z test_principal_matching_is_exact_and_worker_cannot_self_admit (test_handoff.HandoffTests.test_principal_matching_is_exact_and_worker_cannot_self_admit) ... ok
+2026-10-04T02:18:19.4489391Z test_rejected_genesis_is_diagnostic_only (test_handoff.HandoffTests.test_rejected_genesis_is_diagnostic_only) ... ok
+2026-10-04T02:18:19.4514904Z test_reported_semantic_conflict_can_only_force_quarantine (test_handoff.HandoffTests.test_reported_semantic_conflict_can_only_force_quarantine) ... ok
+2026-10-04T02:18:19.4550423Z test_required_evidence_ceiling_owner_and_unknown_fields (test_handoff.HandoffTests.test_required_evidence_ceiling_owner_and_unknown_fields) ... ok
+2026-10-04T02:18:19.5471611Z test_stale_and_concurrent_writers_cannot_both_advance (test_handoff.HandoffTests.test_stale_and_concurrent_writers_cannot_both_advance) ... ok
+2026-10-04T02:18:19.7660875Z test_tampered_records_and_incomplete_tail_quarantined (test_handoff.HandoffTests.test_tampered_records_and_incomplete_tail_quarantined) ... ok
+2026-10-04T02:18:19.7725243Z test_terminal_statuses_cannot_be_promoted (test_handoff.HandoffTests.test_terminal_statuses_cannot_be_promoted) ... ok
+2026-10-04T02:18:19.9332214Z test_two_transitions_chain_and_reject_quarantine_attempts_remain_proposed (test_handoff.HandoffTests.test_two_transitions_chain_and_reject_quarantine_attempts_remain_proposed) ... ok
+2026-10-04T02:18:19.9358659Z test_unauthorized_term_rename_and_definition_change_rejected (test_handoff.HandoffTests.test_unauthorized_term_rename_and_definition_change_rejected) ... ok
+2026-10-04T02:18:19.9382714Z test_valid_fixture_delta_is_accepted_with_real_hashes (test_handoff.HandoffTests.test_valid_fixture_delta_is_accepted_with_real_hashes) ... ok
+2026-10-04T02:18:19.9387920Z test_add_cannot_disguise_a_definition_rewrite (test_strict_inputs.StrictInputs.test_add_cannot_disguise_a_definition_rewrite) ... ok
+2026-10-04T02:18:20.0549991Z test_cli_accept_reject_and_quarantine_exit_codes (test_strict_inputs.StrictInputs.test_cli_accept_reject_and_quarantine_exit_codes) ... ok
+2026-10-04T02:18:20.0601677Z test_conditional_admission_cannot_accept (test_strict_inputs.StrictInputs.test_conditional_admission_cannot_accept) ... ok
+2026-10-04T02:18:20.0610495Z test_corrupt_utf8_log_is_quarantined_without_append (test_strict_inputs.StrictInputs.test_corrupt_utf8_log_is_quarantined_without_append) ... ok
+2026-10-04T02:18:20.0614557Z test_cycles_are_clear_errors (test_strict_inputs.StrictInputs.test_cycles_are_clear_errors) ... ok
+2026-10-04T02:18:20.0621775Z test_duplicate_keys_nonfinite_and_unpaired_surrogates_rejected (test_strict_inputs.StrictInputs.test_duplicate_keys_nonfinite_and_unpaired_surrogates_rejected) ... ok
+2026-10-04T02:18:20.0626007Z test_json_boolean_is_not_integer_in_from_guard (test_strict_inputs.StrictInputs.test_json_boolean_is_not_integer_in_from_guard) ... ok
+2026-10-04T02:18:20.0631342Z test_json_schema_field_set_matches_frozen_state (test_strict_inputs.StrictInputs.test_json_schema_field_set_matches_frozen_state) ... ok
+2026-10-04T02:18:20.0645298Z test_malformed_validation_is_a_clear_verification_error (test_strict_inputs.StrictInputs.test_malformed_validation_is_a_clear_verification_error) ... ok
+2026-10-04T02:18:20.0665422Z test_nonobject_transition_inputs_are_clear_reject_errors (test_strict_inputs.StrictInputs.test_nonobject_transition_inputs_are_clear_reject_errors) ... ok
+2026-10-04T02:18:20.0666234Z test_parent_child_delta_overlap_is_rejected (test_strict_inputs.StrictInputs.test_parent_child_delta_overlap_is_rejected) ... ok
+2026-10-04T02:18:20.0678935Z test_raw_seed_is_not_trusted_as_generated_prose (test_strict_inputs.StrictInputs.test_raw_seed_is_not_trusted_as_generated_prose) ... ok
+2026-10-04T02:18:20.0689436Z test_template_drift_and_added_prose_rejected (test_strict_inputs.StrictInputs.test_template_drift_and_added_prose_rejected) ... ok
+2026-10-04T02:18:20.0776319Z test_unicode_line_separators_remain_data_in_jsonl (test_strict_inputs.StrictInputs.test_unicode_line_separators_remain_data_in_jsonl) ... ok
+2026-10-04T02:18:20.0776825Z 
+2026-10-04T02:18:20.0776992Z ----------------------------------------------------------------------
+2026-10-04T02:18:20.0777295Z Ran 35 tests in 0.659s
+2026-10-04T02:18:20.0777386Z 
+2026-10-04T02:18:20.0777441Z OK
+2026-10-04T02:18:20.0953224Z Post job cleanup.
+2026-10-04T02:18:20.1779884Z (node:2099) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-04T02:18:20.1872149Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-04T02:18:20.2073493Z Post job cleanup.
+2026-10-04T02:18:20.2921646Z [command]/usr/bin/git version
+2026-10-04T02:18:20.2955760Z git version 2.55.0
+2026-10-04T02:18:20.2981265Z Temporarily overriding HOME='/home/runner/work/_temp/201ca25b-ad08-40eb-91a6-453eb61597da' before making global git config changes
+2026-10-04T02:18:20.2981986Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-04T02:18:20.2985804Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/openline-handoff-state/openline-handoff-state
+2026-10-04T02:18:20.3289462Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-04T02:18:20.3345398Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-04T02:18:20.3594257Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-04T02:18:20.3624574Z http.https://github.com/.extraheader
+2026-10-04T02:18:20.3634948Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-04T02:18:20.3673959Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-04T02:18:20.3883137Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-04T02:18:20.3917794Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-04T02:18:20.4250934Z Cleaning up orphan processes
+2026-10-04T02:18:20.4450276Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
