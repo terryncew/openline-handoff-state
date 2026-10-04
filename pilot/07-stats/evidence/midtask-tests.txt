@@ -1,0 +1,13 @@
+F.....
+======================================================================
+FAIL: test_bad_input (test_stats.StatsTest.test_bad_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hatch/workspace/handoff-state-001/pilot/07-stats/tests/test_stats.py", line 51, in test_bad_input
+    self.assertIn("BAD_INPUT", err)
+AssertionError: 'BAD_INPUT' not found in 'Traceback (most recent call last):\n  File "/home/hatch/workspace/handoff-state-001/pilot/07-stats/stats.py", line 32, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File "/home/hatch/workspace/handoff-state-001/pilot/07-stats/stats.py", line 26, in main\n    nums.append(float(line))\n                ^^^^^^^^^^^\nValueError: could not convert string to float: \'abc\'\n'
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.210s
+
+FAILED (failures=1)

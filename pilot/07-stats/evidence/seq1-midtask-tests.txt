@@ -1,0 +1,13 @@
+F.....
+======================================================================
+FAIL: test_bad_input (test_stats.StatsTest.test_bad_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/seq1t/tests/test_stats.py", line 51, in test_bad_input
+    self.assertIn("BAD_INPUT", err)
+AssertionError: 'BAD_INPUT' not found in 'Traceback (most recent call last):\n  File "/tmp/seq1t/seq1_impl.py", line 27, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File "/tmp/seq1t/seq1_impl.py", line 21, in main\n    nums.append(float(part))\n                ^^^^^^^^^^^\nValueError: could not convert string to float: \'abc\'\n'
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.254s
+
+FAILED (failures=1)
