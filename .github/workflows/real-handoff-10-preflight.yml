@@ -1,0 +1,22 @@
+name: REAL-HANDOFF-10 independent execution and proposal preflight
+on:
+  push:
+    branches: [validation/real-handoff-10-clean]
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Independent operational cases and preservation
+        run: python pilot/10-cli/evidence/execution/independent-checks.py "$RUNNER_TEMP/handoff10-independent.json"
+      - name: Canonical unadmitted proposal and hypothetical admission preflight
+        run: python pilot/10-cli/evidence/execution/completion-preflight.py pilot/10-cli/evidence/execution/ci-smoke.json "$RUNNER_TEMP/handoff10-independent.json"
