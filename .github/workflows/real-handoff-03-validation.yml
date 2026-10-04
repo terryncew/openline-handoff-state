@@ -1,44 +1,101 @@
-name: REAL-HANDOFF-03 isolated validation
+name: REAL-HANDOFF-03 completion preflight
 on:
   push:
     branches: [codex/real-handoff-03-validation]
 permissions:
   contents: read
 jobs:
-  frozen-tests:
+  preflight:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 543e03e99e124a59e8ed1d17b7528d008ea5329f
+          ref: 4dd687f25e7349e56320dbecff7c1d943b70ed8c
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Verify starting state and protected artifacts
+      - name: Verify exact successor and tested tree
         run: |
-          test "$(git rev-parse HEAD)" = "543e03e99e124a59e8ed1d17b7528d008ea5329f"
+          test "$(git rev-parse HEAD)" = "4dd687f25e7349e56320dbecff7c1d943b70ed8c"
+          test "$(git rev-parse HEAD^)" = "c8f7247652fe8904d2590f7d6be0e01e8825d45a"
           test "$(git rev-parse HEAD^{tree})" = "c0c7367445a5bba44eaa0d6a4dd8e6c6936d8839"
+          test "$(git rev-parse 543e03e99e124a59e8ed1d17b7528d008ea5329f^{tree})" = "$(git rev-parse HEAD^{tree})"
           test "$(git diff --name-only c8f7247652fe8904d2590f7d6be0e01e8825d45a HEAD)" = "pilot/03-wordfreq/wordfreq.py"
+          test "$(git diff --name-only HEAD 5bb63c006ef06e330d50460cc25cc479315f8db1)" = "pilot/03-wordfreq/proposed-completion.json"
+      - name: No admission and hypothetical mechanical preflight only
+        run: |
           python - <<'PY'
           import hashlib
+          import subprocess
           from pathlib import Path
-          from handoff.canonical import loads, state_hash
-          expected = {
-              "pilot/03-wordfreq/SPEC.md": "b80ae92e2972fe1dedf76f564c0d53640eec01bea23ef858713e3874ec56ac48",
-              "pilot/03-wordfreq/tests/test_wordfreq.py": "ff70821c24d04c8424f4920d74ef05c20917ab69e82884ff7d0c93b118120825",
-              "pilot/03-wordfreq/evidence/midtask-tests.txt": "4133fd40f18e4002c85fab9ad2f4b92f6372a559827f4f0e8beef7b2d973b064",
-          }
-          for path, sha in expected.items():
-              assert hashlib.sha256(Path(path).read_bytes()).hexdigest() == sha
-              print(path, sha)
-          state = loads(Path("pilot/03-wordfreq/handoff-state.json").read_text(encoding="utf-8"))
-          assert state_hash(state) == "sha256:6fa241081db215d04cd21028333ff60afedbeef3ffd7601eb46b0244e973f9b2"
-          print("accepted_state_hash", state_hash(state))
-          print("implementation_sha256", hashlib.sha256(Path("pilot/03-wordfreq/wordfreq.py").read_bytes()).hexdigest())
+          from handoff.canonical import loads, state_hash, canonical_json
+          from handoff.core import evaluate, same, verify_record, apply_delta
+          from handoff.store import replay
+          
+          state_path = Path("pilot/03-wordfreq/handoff-state.json")
+          log_path = Path("pilot/03-wordfreq/handoff-transition.jsonl")
+          state_bytes, log_bytes = state_path.read_bytes(), log_path.read_bytes()
+          prior = loads(state_bytes.decode("utf-8"))
+          proposal_bytes = subprocess.check_output([
+              "git", "show", "5bb63c006ef06e330d50460cc25cc479315f8db1:pilot/03-wordfreq/proposed-completion.json"
+          ])
+          proposal = loads(proposal_bytes.decode("utf-8"))
+          assert set(proposal) == {"prior_state", "proposed_delta", "admission"}
+          assert same(proposal["prior_state"], prior) and proposal["admission"] == {}
+          assert proposal["proposed_delta"]["identifiers.shas"]["add"]["successor_commit"] == "4dd687f25e7349e56320dbecff7c1d943b70ed8c"
+          assert hashlib.sha256(Path("pilot/03-wordfreq/wordfreq.py").read_bytes()).hexdigest() == proposal["proposed_delta"]["identifiers.shas"]["add"]["successor_wordfreq_py"]
+          latest = replay(log_path)
+          assert latest is not None and same(latest["state"], prior)
+          accepted_hash = state_hash(prior)
+          assert accepted_hash == "sha256:6fa241081db215d04cd21028333ff60afedbeef3ffd7601eb46b0244e973f9b2"
+          seq = latest["transition"]["seq"] + 1
+          assert seq == 2
+          delta = proposal["proposed_delta"]
+          candidate_state = apply_delta(prior, delta)
+          for field in ("schema", "task_id", "goal", "authority_owner", "frozen_invariants", "stop_conditions", "claims", "open_questions", "failed_or_superseded_paths", "canonical_terms", "roles", "proposed_state_changes"):
+              assert same(candidate_state[field], prior[field]), field
+          assert same(candidate_state["verified_facts"][:len(prior["verified_facts"])], prior["verified_facts"])
+          for group, values in prior["identifiers"].items():
+              for key, value in values.items():
+                  assert same(candidate_state["identifiers"][group][key], value)
+          unadmitted = evaluate(prior, delta, {}, seq=seq)
+          assert unadmitted["transition"]["validation"]["result"] == "reject"
+          assert same(unadmitted["state"], prior)
+          assert unadmitted["transition"]["prior_state_hash"] == accepted_hash
+          assert unadmitted["transition"]["resulting_state_hash"] == accepted_hash
+          assert verify_record(prior, unadmitted["transition"]) == []
+          hypothetical = evaluate(prior, delta, {
+              "decision": "admit", "by": prior["authority_owner"],
+              "at": "2026-10-04T00:00:00+00:00",
+              "evidence": "HYPOTHETICAL OWNER-ADMISSION PREFLIGHT ONLY; not an owner declaration"
+          }, seq=seq)
+          assert hypothetical["transition"]["validation"]["result"] == "accept"
+          assert all(check["pass"] for check in hypothetical["transition"]["validation"]["checks"])
+          assert verify_record(prior, hypothetical["transition"]) == []
+          assert state_path.read_bytes() == state_bytes and log_path.read_bytes() == log_bytes
+          assert state_hash(loads(state_path.read_text(encoding="utf-8"))) == accepted_hash
+          print(canonical_json({
+              "successor_commit": "4dd687f25e7349e56320dbecff7c1d943b70ed8c",
+              "tested_candidate_commit": "543e03e99e124a59e8ed1d17b7528d008ea5329f",
+              "identical_tested_tree": "c0c7367445a5bba44eaa0d6a4dd8e6c6936d8839",
+              "proposal_commit": "5bb63c006ef06e330d50460cc25cc479315f8db1",
+              "proposal_sha256": hashlib.sha256(proposal_bytes).hexdigest(),
+              "unadmitted_result": "reject",
+              "unadmitted_failed_checks": [c["check"] for c in unadmitted["transition"]["validation"]["checks"] if not c["pass"]],
+              "accepted_current_state": prior["current_state"],
+              "accepted_state_hash": accepted_hash,
+              "result_without_admission": unadmitted["transition"]["resulting_state_hash"],
+              "hypothetical_preflight_only_result": "accept",
+              "hypothetical_checks": hypothetical["transition"]["validation"]["checks"],
+              "hypothetical_all_checks_pass": True,
+              "hypothetical_record_verified": True,
+              "protected_state_file_sha256": hashlib.sha256(state_bytes).hexdigest(),
+              "protected_history_sha256": hashlib.sha256(log_bytes).hexdigest(),
+              "protected_state_and_history_unchanged": True,
+              "all_frozen_protected_fields_and_historical_identifiers_preserved": True,
+              "actual_owner_admission_performed": False
+          }))
           PY
-      - name: Frozen task acceptance tests
-        run: python -m unittest discover -s pilot/03-wordfreq/tests -v
-      - name: Existing Handoff State suite
-        if: always()
-        run: python -m unittest discover -s handoff/tests -v
+      - name: Verify protected tracked files remain unchanged
+        run: git diff --exit-code
