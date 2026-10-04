@@ -1,0 +1,30 @@
+REAL-HANDOFF-07 exact proposal preflight
+Command: python -B pilot/07-stats/evidence/successor-preflight.py
+Proposal content commit: b31818ba97d91deb77f6544c3c33a5ead77d302c
+Corrected preflight script commit: 3290014663094c5b0218e99c092d766d9d7b8ebf
+Proposal JSON unchanged between those commits.
+
+First execution:
+Run: https://github.com/terryncew/openline-handoff-state/actions/runs/37172401619/job/111347867933
+Validation workflow commit: b316e0f68762d9f33dca0f96d8c26c67eade977c
+Exit: 1
+ImportError: cannot import name 'same' from 'handoff.canonical'
+The preflight script imported same from the wrong module.
+Corrected the new evidence script to import same from handoff.core.
+The proposal, accepted history, implementation, and frozen tests were unchanged.
+
+Corrected execution:
+Run: https://github.com/terryncew/openline-handoff-state/actions/runs/37172486041/job/111348119908
+Validation workflow commit: 157de5c74fc6895f4b04374e66cb696fea4ca1af
+Checkout: 3290014663094c5b0218e99c092d766d9d7b8ebf
+Exit: 0
+2026-10-04T02:54:48.9164750Z UNADMITTED_PROPOSAL: REJECT
+2026-10-04T02:54:48.9166043Z ACCEPTED_STATE_AND_HASH_WITHOUT_ADMISSION: UNCHANGED
+2026-10-04T02:54:48.9167447Z HYPOTHETICAL_OWNER_ADMISSION_PREFLIGHT: PASS
+2026-10-04T02:54:48.9168666Z ACCEPTED_HISTORY_AND_CONSTRAINTS_PRESERVED: PASS
+2026-10-04T02:54:48.9170645Z CURRENT_HEAD: seq 2 sha256:90d4553808ac86b086fd26086f3a405c8430dee58404333f656d50838d80b587
+2026-10-04T02:54:48.9172330Z SUPERSEDED_COMMA_ACCEPTANCE: NOT_REVIVED
+2026-10-04T02:54:48.9173366Z ACTUAL_OWNER_ADMISSION: NOT_PERFORMED
+
+Hypothetical admission was in-memory evaluate input only; no hypothetical receipt was appended or persisted.
+Actual accepted sequence is still 2; proposed seq 3 was not admitted.
