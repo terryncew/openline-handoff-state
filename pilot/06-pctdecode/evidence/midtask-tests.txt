@@ -1,0 +1,21 @@
+..F.F.
+======================================================================
+FAIL: test_lone_percent_end (test_pctdecode.PctDecodeTest.test_lone_percent_end)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hatch/workspace/handoff-state-001/pilot/06-pctdecode/tests/test_pctdecode.py", line 39, in test_lone_percent_end
+    self.assertEqual(code, 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_malformed_left_literal (test_pctdecode.PctDecodeTest.test_malformed_left_literal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hatch/workspace/handoff-state-001/pilot/06-pctdecode/tests/test_pctdecode.py", line 34, in test_malformed_left_literal
+    self.assertEqual(code, 0)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.167s
+
+FAILED (failures=2)
