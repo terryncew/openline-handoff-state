@@ -4,10 +4,9 @@ APPROACH B (admitted replacement for the superseded recursive DFS in
 evidence/approach-a/): iterative Kahn's algorithm with a heap for the
 lexicographic tie-break. No recursion anywhere.
 
-MID-TASK STATE: parsing, ordering, tie-breaking, and 100k-node scale
-work (4/5 tests pass). Cycle detection NOT implemented: on cyclic input
-the current code emits the partial order and exits 0 instead of the
-spec-required nonzero exit with CYCLE on stderr.
+Cycles are detected when Kahn's algorithm exhausts the ready heap before
+emitting every node. This remains iterative and does not depend on the
+recursion limit.
 """
 import heapq
 import json
@@ -50,8 +49,9 @@ def main():
             indeg[dependent] -= 1
             if indeg[dependent] == 0:
                 heapq.heappush(heap, dependent)
-    # MID-TASK GAP: no cycle detection. A cyclic input leaves nodes
-    # unemitted; the spec requires nonzero exit with CYCLE on stderr.
+    if len(out) != len(nodes):
+        sys.stderr.write("CYCLE\n")
+        return 1
     sys.stdout.write("".join(name + "\n" for name in out))
     return 0
 
