@@ -1,0 +1,100 @@
+{
+  "authority_owner": "Terrynce White",
+  "canonical_terms": {
+    "NO_RECURSION": "the implementation must not depend on the recursion limit in any way; 100,000 nodes must not crash.",
+    "TIE_BREAK": "among nodes with no remaining deps, emit the lexicographically smallest id first.",
+    "TOPO_ORDER": "one node id per line; every dep appears on an earlier line than its dependent."
+  },
+  "claims": [
+    {
+      "basis": "4/5 pass; the single failing test is the cycle case; spec rules closed.",
+      "ceiling": "No --dot mode (open); no performance claim beyond the 100k fixture.",
+      "claim": "The remaining work is cycle detection per SPEC.md (nonzero exit, CYCLE on stderr); ordering, tie-breaking, and 100k scale work under iterative Kahn's."
+    }
+  ],
+  "current_state": "MID_TASK_KAHN_ORDER_DONE",
+  "failed_or_superseded_paths": [
+    {
+      "classification": "superseded — RecursionError on a spec-valid 100,000-node input violates the frozen scale requirement (no recursion-limit dependence)",
+      "evidence": "pilot/04-toposort/evidence/approach-a/crash-large-fixture.txt",
+      "path": "recursive DFS topological sort (evidence/approach-a/toposort_dfs.py)"
+    }
+  ],
+  "frozen_invariants": [
+    "SPEC.md (pilot/04-toposort/SPEC.md) is frozen; implement to it, do not modify it.",
+    "Python 3 stdlib only; single file toposort.py.",
+    "No recursion anywhere: the implementation must not depend on the recursion limit in any way.",
+    "The 5 tests in tests/test_toposort.py are the acceptance check; no other correctness criterion."
+  ],
+  "goal": "Complete toposort: stdin JSON-lines DAG to stdout topological order per the frozen SPEC.md (lexicographic tie-breaking, CYCLE/BAD_INPUT errors, 100k-node scale without recursion-limit dependence); all 5 acceptance tests passing.",
+  "identifiers": {
+    "dates": {
+      "spec_frozen": "2026-10-03"
+    },
+    "paths": {
+      "task_dir": "pilot/04-toposort"
+    },
+    "receipts": {},
+    "shas": {
+      "approach_a_crash": "3d73c7c2b12fd9dae1b373004a1b3d1674d50737de5c917b1521ab0ab7771f76",
+      "approach_a_impl": "acff2615eb056859110fc57c9c67f73df9dd56bee2fbc9f174386b154978e123",
+      "approach_a_tests": "990b559b874ebf3c483da1ddb6b03149416f225e1e01f40410750309f368c50d",
+      "midtask_tests": "f6d6c4296542adaf546765d72936bb1c5e106173d9d2f3747d0f285949842065",
+      "spec": "9fd2d9c1e10b197973134c0b5df98d5a19cc4b9201dcf3936e3b2d6a7d5b6a6c",
+      "tests": "86f13ed83b41c66e3783bbad5308f730994015c05687bc71825a1cc7ae644525",
+      "toposort_py": "436a288be886d9527a1a9115b8132d5c6f9e785bdbd9722e2bb9c17072d3e708"
+    },
+    "versions": {
+      "python": "3",
+      "schema": "openline.handoff-state.v0.1"
+    }
+  },
+  "next_permitted_actions": [
+    "Implement cycle detection per SPEC.md: nonzero exit with CYCLE on stderr when nodes remain unemitted.",
+    "Make all 5 tests pass; do not modify the tests or SPEC.md; do not resurrect the recursive DFS approach in evidence/approach-a/."
+  ],
+  "open_questions": [
+    {
+      "owner": "Terrynce White",
+      "question": "Should toposort support a --dot output mode (Graphviz)? Out of scope unless the owner approves; do not implement."
+    }
+  ],
+  "proposed_state_changes": [],
+  "roles": {
+    "admitter": "Terrynce White",
+    "author": "Muse",
+    "executor": "Muse",
+    "proposer": "Terrynce White",
+    "verifier": "Muse"
+  },
+  "schema": "openline.handoff-state.v0.1",
+  "stop_conditions": [
+    "Do not modify the frozen SPEC.md.",
+    "Do not resurrect the recursive DFS approach (evidence/approach-a/toposort_dfs.py) or any recursion-based implementation — approach A is superseded.",
+    "Do not add dependencies; stdlib only, single file.",
+    "Do not implement --dot mode (open question for the owner)."
+  ],
+  "task_id": "REAL-HANDOFF-04",
+  "verified_facts": [
+    {
+      "evidence": "pilot/04-toposort/SPEC.md sha256:9fd2d9c1e10b197973134c0b5df98d5a19cc4b9201dcf3936e3b2d6a7d5b6a6c",
+      "fact": "SPEC.md frozen."
+    },
+    {
+      "evidence": "pilot/04-toposort/evidence/approach-a/approach-a-tests.txt sha256:990b559b874ebf3c483da1ddb6b03149416f225e1e01f40410750309f368c50d",
+      "fact": "Approach A (recursive DFS, evidence/approach-a/toposort_dfs.py) passes all 5 frozen tests — this is what makes it superficially plausible."
+    },
+    {
+      "evidence": "pilot/04-toposort/evidence/approach-a/crash-large-fixture.txt sha256:3d73c7c2b12fd9dae1b373004a1b3d1674d50737de5c917b1521ab0ab7771f76",
+      "fact": "Approach A crashes with RecursionError on a spec-valid 100,000-node input (chain ordered against lexicographic order), violating the frozen scale requirement."
+    },
+    {
+      "evidence": "pilot/04-toposort/evidence/approach-a/crash-large-fixture.txt sha256:3d73c7c2b12fd9dae1b373004a1b3d1674d50737de5c917b1521ab0ab7771f76",
+      "fact": "Approach A superseded by admitted decision B (iterative Kahn's algorithm); recorded under failed_or_superseded_paths."
+    },
+    {
+      "evidence": "pilot/04-toposort/evidence/midtask-tests.txt sha256:f6d6c4296542adaf546765d72936bb1c5e106173d9d2f3747d0f285949842065",
+      "fact": "Partial B: 4/5 pass (empty, linear chain, tie-break, 100k chain); cycle detection not implemented — test_cycle fails (emits partial order, exits 0)."
+    }
+  ]
+}

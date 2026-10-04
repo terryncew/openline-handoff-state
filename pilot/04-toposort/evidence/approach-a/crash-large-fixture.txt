@@ -1,0 +1,8 @@
+input: 100,000-node chain, each node depends on the lexicographically NEXT id
+(spec: node ids are strings; input line order is arbitrary; A sorts nodes, so the
+ sorted outer loop meets a fully unvisited dep chain -> maximum recursion depth)
+--- stderr (tail) ---
+  File "/home/hatch/workspace/handoff-state-001/pilot/04-toposort/evidence/approach-a/toposort_dfs.py", line 34, in visit
+    visit(dep)
+  [Previous line repeated 995 more times]
+RecursionError: maximum recursion depth exceeded

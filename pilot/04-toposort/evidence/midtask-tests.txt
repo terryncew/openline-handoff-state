@@ -1,0 +1,13 @@
+F....
+======================================================================
+FAIL: test_cycle (test_toposort.ToposortTest.test_cycle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hatch/workspace/handoff-state-001/pilot/04-toposort/tests/test_toposort.py", line 57, in test_cycle
+    self.assertNotEqual(code, 0)
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.002s
+
+FAILED (failures=1)
