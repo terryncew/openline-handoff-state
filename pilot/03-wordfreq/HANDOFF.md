@@ -17,10 +17,10 @@ PROPOSED STATE CHANGES
 The proposed state changes are [].
 
 IDENTIFIERS
-The identifiers are {"dates":{"spec_frozen":"2026-10-03"},"paths":{"task_dir":"pilot/03-wordfreq"},"receipts":{},"shas":{"midtask_tests":"4133fd40f18e4002c85fab9ad2f4b92f6372a559827f4f0e8beef7b2d973b064","spec":"b80ae92e2972fe1dedf76f564c0d53640eec01bea23ef858713e3874ec56ac48","tests":"ff70821c24d04c8424f4920d74ef05c20917ab69e82884ff7d0c93b118120825","wordfreq_py":"0d000d2ac56e9474167cf7c628fd9d25879646b13d6696b1c9c6aebcdd55f782"},"versions":{"python":"3","schema":"openline.handoff-state.v0.1"}}.
+The identifiers are {"dates":{"closeout":"2026-10-03","spec_frozen":"2026-10-03"},"paths":{"task_dir":"pilot/03-wordfreq"},"receipts":{},"shas":{"midtask_tests":"4133fd40f18e4002c85fab9ad2f4b92f6372a559827f4f0e8beef7b2d973b064","spec":"b80ae92e2972fe1dedf76f564c0d53640eec01bea23ef858713e3874ec56ac48","successor_commit":"4dd687f25e7349e56320dbecff7c1d943b70ed8c","tests":"ff70821c24d04c8424f4920d74ef05c20917ab69e82884ff7d0c93b118120825","wordfreq_py":"0d000d2ac56e9474167cf7c628fd9d25879646b13d6696b1c9c6aebcdd55f782","wordfreq_py_completed":"471edd0ea55b06d1359317d14c01a1b2deff3f8f84cea087718aa78f1569b9f0"},"versions":{"python":"3","schema":"openline.handoff-state.v0.1"}}.
 
 CURRENT STATE
-The current state is "MID_TASK_BASIC_COUNT_DONE".
+The current state is "COMPLETE".
 
 AUTHORITY
 The authority owner is "Terrynce White".
@@ -32,7 +32,7 @@ FROZEN INVARIANTS
 The frozen invariants are ["SPEC.md (pilot/03-wordfreq/SPEC.md) is frozen; implement to it, do not modify it.","Python 3 stdlib only; single file wordfreq.py.","Tokenization is exactly maximal [a-z0-9] runs after lowercasing; no stemming, no stop-words, no 'improvements'.","The 6 tests in tests/test_wordfreq.py are the acceptance check; no other correctness criterion."].
 
 VERIFIED EVIDENCE
-The verified facts and evidence references are [{"evidence":"pilot/03-wordfreq/SPEC.md sha256:b80ae92e2972fe1dedf76f564c0d53640eec01bea23ef858713e3874ec56ac48","fact":"SPEC.md frozen."},{"evidence":"pilot/03-wordfreq/evidence/midtask-tests.txt sha256:4133fd40f18e4002c85fab9ad2f4b92f6372a559827f4f0e8beef7b2d973b064","fact":"Basic counting, case folding, and empty input work: 3/6 tests pass."},{"evidence":"pilot/03-wordfreq/evidence/midtask-tests.txt sha256:4133fd40f18e4002c85fab9ad2f4b92f6372a559827f4f0e8beef7b2d973b064","fact":"Punctuation-aware tokenization and count-ordered output not implemented: 3/6 tests fail (punctuation separators, sort order, digits order); current code splits on whitespace only with first-seen key order."}].
+The verified facts and evidence references are [{"evidence":"pilot/03-wordfreq/SPEC.md sha256:b80ae92e2972fe1dedf76f564c0d53640eec01bea23ef858713e3874ec56ac48","fact":"SPEC.md frozen."},{"evidence":"pilot/03-wordfreq/evidence/midtask-tests.txt sha256:4133fd40f18e4002c85fab9ad2f4b92f6372a559827f4f0e8beef7b2d973b064","fact":"Basic counting, case folding, and empty input work: 3/6 tests pass."},{"evidence":"pilot/03-wordfreq/evidence/midtask-tests.txt sha256:4133fd40f18e4002c85fab9ad2f4b92f6372a559827f4f0e8beef7b2d973b064","fact":"Punctuation-aware tokenization and count-ordered output not implemented: 3/6 tests fail (punctuation separators, sort order, digits order); current code splits on whitespace only with first-seen key order."},{"evidence":"owner CLOSE order 2026-10-03 (recorded result: CONTEXT_ISOLATION PASS)","fact":"Successor inferred the task, current state, next actions, stop conditions, unresolved items, and admission authority before changing any file; no outside task information was required; no extra-context task request was made."},{"evidence":"GitHub Actions run 37166451457; independent local re-run 6/6 on successor commit 4dd687f25e7349e56320dbecff7c1d943b70ed8c","fact":"Frozen acceptance tests: 6/6 PASS."},{"evidence":"GitHub Actions run 37166451457; independent local re-run 35/35 on successor commit 4dd687f25e7349e56320dbecff7c1d943b70ed8c","fact":"Handoff State tests: 35/35 PASS."},{"evidence":"git rev-parse 4dd687f^ ; git diff --name-only c8f7247..4dd687f (owner closeout verification 2026-10-03)","fact":"Successor commit 4dd687f25e7349e56320dbecff7c1d943b70ed8c: parent exactly c8f7247652fe8904d2590f7d6be0e01e8825d45a; changed only pilot/03-wordfreq/wordfreq.py."},{"evidence":"pre-admission state hash sha256:6fa241081db215d04cd21028333ff60afedbeef3ffd7601eb46b0244e973f9b2 matched the published hash; owner CLOSE order 2026-10-03 (recorded result)","fact":"Accepted state and transition history remained unchanged before owner admission; the unadmitted completion proposal was correctly rejected."}].
 
 OPEN QUESTIONS
 The open questions and owners are [{"owner":"Terrynce White","question":"Should wordfreq support a --top N flag? Out of scope unless the owner approves; do not implement."},{"owner":"Terrynce White","question":"Should wordfreq support a minimum word-length filter? Out of scope unless the owner approves; do not implement."}].
@@ -41,7 +41,7 @@ FAILED / SUPERSEDED PATHS
 The failed or superseded paths, classifications, and evidence references are [{"classification":"superseded — spec froze maximal [a-z0-9] runs (\\w includes underscore)","evidence":"pilot/03-wordfreq/SPEC.md (Tokenization section)","path":"regex \\w+ tokenization"}].
 
 NEXT PERMITTED ACTION
-The next permitted actions are ["Implement [a-z0-9] tokenization and count-descending/word-ascending output per SPEC.md.","Make all 6 tests pass; do not modify the tests or SPEC.md to do it."].
+The next permitted actions are [].
 
 STOP CONDITIONS
 The stop conditions are ["Do not modify the frozen SPEC.md.","Do not add dependencies; stdlib only, single file.","Do not 'improve' tokenization (no stemming, no stop-words); maximal [a-z0-9] runs exactly.","Do not implement --top N or minimum-length filter (open questions for the owner)."].
