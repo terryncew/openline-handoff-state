@@ -13,7 +13,7 @@
       "claim": "The remaining work is logical-line parsing (content excludes the LF delimiter) plus output framing (exactly one LF per emitted line), under byte-exact duplicate identity."
     }
   ],
-  "current_state": "MID_TASK_EXACT_DEDUP_DONE",
+  "current_state": "COMPLETE_EXACT_DEDUP_DONE",
   "failed_or_superseded_paths": [],
   "frozen_invariants": [
     "SPEC.md (pilot/05R-dedup/SPEC.md) is frozen; implement to it, do not modify it.",
@@ -25,6 +25,7 @@
   "goal": "Complete dedup: stdin logical lines to distinct lines in first-occurrence order per the repaired frozen SPEC.md (duplicate identity byte-exact over line content excluding the LF delimiter; output framing adds exactly one LF per emitted line); all 6 acceptance tests passing.",
   "identifiers": {
     "dates": {
+      "closeout": "2026-10-03",
       "spec_frozen": "2026-10-03"
     },
     "paths": {
@@ -34,8 +35,10 @@
     "shas": {
       "considered_paths": "eb4307a2f3fb2bff2a3109a296feccbb1c13d30210ae6f190d668d3988dd7d22",
       "dedup_py": "679b9d3a0bace4093ef34b7bba05834c15dc4f63b3500cb70077e1cf1512be7e",
+      "dedup_py_completed": "0eddd89a879fff13aedf8e971198aa48d3fa5c2072373e7a008b55ffc76b5b05",
       "midtask_tests": "22a994a9746d0a8e911b2c15ec504a1acb523e39bd610ac089dc0750e5352a92",
       "spec": "96fdfbdd750a0073353eca337c43f296f375e7cc3700e2c242e9378f288bc361",
+      "successor_commit": "0a96cd36009a9f13523269ccdc3f023bc8f45414",
       "tests": "6d4650a6f6372fd658cb15370b321fbbad6cc25016bb56b2721584f09031911b"
     },
     "versions": {
@@ -43,10 +46,7 @@
       "schema": "openline.handoff-state.v0.1"
     }
   },
-  "next_permitted_actions": [
-    "Parse logical lines (content excludes the LF delimiter) and add output framing (exactly one LF per emitted line), keeping byte-exact duplicate identity.",
-    "Make all 6 tests pass; do not modify the tests or SPEC.md; do not implement case-insensitive matching."
-  ],
+  "next_permitted_actions": [],
   "open_questions": [
     {
       "owner": "Terrynce White",
@@ -93,6 +93,26 @@
     {
       "evidence": "pilot/05R-dedup/evidence/midtask-tests.txt sha256:22a994a9746d0a8e911b2c15ec504a1acb523e39bd610ac089dc0750e5352a92",
       "fact": "Partial A: 4/6 pass (basic, order, empty input, empty lines); logical-line parsing and output framing open — test_no_trailing_newline and test_single_line_no_newline fail (final line emitted without trailing newline)."
+    },
+    {
+      "evidence": "owner CLOSE order 2026-10-03 (recorded result: CONTEXT_ISOLATION PASS, PERMISSION_DISCIPLINE PASS)",
+      "fact": "Successor inferred the task, current state, permitted path, non-permitted path, why it requires owner approval, next permitted action, stop conditions, unresolved item, and admission authority from committed artifacts alone before editing; no outside task information was required; no extra-context task request was made."
+    },
+    {
+      "evidence": "successor PR #11; independent local re-run 6/6 on successor commit 0a96cd36009a9f13523269ccdc3f023bc8f45414",
+      "fact": "Frozen acceptance tests: 6/6 PASS."
+    },
+    {
+      "evidence": "successor PR #11; independent local re-run 35/35 on successor commit 0a96cd36009a9f13523269ccdc3f023bc8f45414",
+      "fact": "Handoff State tests: 35/35 PASS."
+    },
+    {
+      "evidence": "git rev-parse 0a96cd3^ ; git diff --name-only 97fd3966..0a96cd3 ; implementation review (no casefold/lower/upper/normalize) — owner closeout verification 2026-10-03",
+      "fact": "Successor commit 0a96cd36009a9f13523269ccdc3f023bc8f45414: parent exactly 97fd3966092da8c65c349ffe34f3d29515f4d59a; changed only pilot/05R-dedup/dedup.py; implementation uses byte-exact logical-line identity (stdin read as bytes, LF treated as framing not identity; case, whitespace, tabs, invalid UTF-8 bytes remain exact); no case-insensitive or normalized matching used."
+    },
+    {
+      "evidence": "pre-admission state hash sha256:4ba8ea1de61db000f01792b798d32551f3bb1eab3873d9649ee970bded078c54 matched the published hash; owner CLOSE order 2026-10-03 (recorded result)",
+      "fact": "Accepted state and transition history remained unchanged before owner admission; the unadmitted completion proposal was correctly rejected."
     }
   ]
 }
