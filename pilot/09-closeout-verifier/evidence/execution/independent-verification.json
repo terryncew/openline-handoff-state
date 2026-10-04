@@ -1,0 +1,459 @@
+{
+  "independent_verification": "PASS",
+  "positive_cases": 5,
+  "negative_cases": 27,
+  "cases": [
+    {
+      "case": "positive: legitimate admitted REAL-HANDOFF-08 closeout",
+      "expected": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "case": "positive: explicitly allowed implementation change",
+      "expected": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "case": "positive: explicitly allowed evidence addition",
+      "expected": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "case": "positive: alternate task directory and explicit allowlist",
+      "expected": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "case": "negative: rewritten historical transition",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "history-preserved",
+          "detail": "frozen record 0 differs in candidate history: rewritten history"
+        },
+        {
+          "check": "chain-replay",
+          "detail": "canonical v0.1 replay failed: quarantine: invalid record at line 1: transition mismatch: rendered_prose"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate state file differs from replayed state"
+        },
+        {
+          "check": "protected-files",
+          "detail": "frozen log byte prefix changed"
+        }
+      ]
+    },
+    {
+      "case": "negative: deleted historical transition",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "history-preserved",
+          "detail": "frozen record 0 differs in candidate history: rewritten history"
+        },
+        {
+          "check": "history-extends",
+          "detail": "candidate history does not extend the frozen history"
+        },
+        {
+          "check": "chain-replay",
+          "detail": "canonical v0.1 replay failed: quarantine: sequence mismatch at line 1"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate state file differs from replayed state"
+        },
+        {
+          "check": "protected-files",
+          "detail": "frozen log byte prefix changed"
+        }
+      ]
+    },
+    {
+      "case": "negative: wrong prior hash",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "first-new-record",
+          "detail": "prior_state_hash is not the frozen head hash: wrong prior hash"
+        },
+        {
+          "check": "first-new-record",
+          "detail": "canonical v0.1 re-evaluation failed: transition mismatch: prior_state_hash"
+        },
+        {
+          "check": "chain-replay",
+          "detail": "canonical v0.1 replay failed: quarantine: invalid record at line 3: transition mismatch: prior_state_hash"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate state file differs from replayed state"
+        }
+      ]
+    },
+    {
+      "case": "negative: skipped first new sequence",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "first-new-record",
+          "detail": "expected seq 3, found 5: skipped sequence"
+        },
+        {
+          "check": "chain-replay",
+          "detail": "canonical v0.1 replay failed: quarantine: sequence mismatch at line 3"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate state file differs from replayed state"
+        }
+      ]
+    },
+    {
+      "case": "negative: missing owner admission",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "first-new-record",
+          "detail": "admission does not identify 'Terrynce White' exactly: missing/incorrect owner admission"
+        },
+        {
+          "check": "first-new-record",
+          "detail": "canonical v0.1 re-evaluation failed: transition mismatch: rendered_prose; transition mismatch: resulting_state_hash; transition mismatch: validation"
+        },
+        {
+          "check": "chain-replay",
+          "detail": "canonical v0.1 replay failed: quarantine: invalid record at line 3: transition mismatch: rendered_prose; transition mismatch: resulting_state_hash; transition mismatch: validation"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate state file differs from replayed state"
+        }
+      ]
+    },
+    {
+      "case": "negative: incorrect exact owner admission",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "first-new-record",
+          "detail": "admission does not identify 'Terrynce White' exactly: missing/incorrect owner admission"
+        },
+        {
+          "check": "first-new-record",
+          "detail": "canonical v0.1 re-evaluation failed: transition mismatch: rendered_prose; transition mismatch: resulting_state_hash; transition mismatch: validation"
+        },
+        {
+          "check": "chain-replay",
+          "detail": "canonical v0.1 replay failed: quarantine: invalid record at line 3: transition mismatch: rendered_prose; transition mismatch: resulting_state_hash; transition mismatch: validation"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate state file differs from replayed state"
+        }
+      ]
+    },
+    {
+      "case": "negative: unadmitted proposal marked accepted",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "first-new-record",
+          "detail": "canonical v0.1 re-evaluation failed: transition mismatch: validation"
+        },
+        {
+          "check": "chain-replay",
+          "detail": "canonical v0.1 replay failed: quarantine: invalid record at line 3: transition mismatch: validation"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate state file differs from replayed state"
+        }
+      ]
+    },
+    {
+      "case": "negative: recorded final hash mismatch",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "first-new-record",
+          "detail": "canonical v0.1 re-evaluation failed: transition mismatch: resulting_state_hash"
+        },
+        {
+          "check": "chain-replay",
+          "detail": "canonical v0.1 replay failed: quarantine: invalid record at line 3: transition mismatch: resulting_state_hash"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate state file differs from replayed state"
+        }
+      ]
+    },
+    {
+      "case": "negative: final candidate state/hash mismatch",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "final-hash",
+          "detail": "replayed final hash != candidate state document hash: final state/hash mismatch"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate state file differs from replayed state"
+        }
+      ]
+    },
+    {
+      "case": "negative: protected-file mutation",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "protected-files",
+          "detail": "protected bytes changed: pilot/08-intervals/SPEC.md"
+        }
+      ]
+    },
+    {
+      "case": "negative: unlisted new file",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "allowlist",
+          "detail": "unlisted new file: pilot/08-intervals/evidence/execution/unlisted.txt"
+        }
+      ]
+    },
+    {
+      "case": "negative: change outside implementation_changed",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "protected-files",
+          "detail": "protected bytes changed: pilot/08-intervals/intervals.py"
+        }
+      ]
+    },
+    {
+      "case": "negative: addition outside evidence_added",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "allowlist",
+          "detail": "unlisted new file: pilot/08-intervals/evidence/execution/canonical-python-preflight.txt"
+        },
+        {
+          "check": "allowlist",
+          "detail": "unlisted new file: pilot/08-intervals/evidence/execution/closeout-ci-record.md"
+        }
+      ]
+    },
+    {
+      "case": "negative: protected-file deletion",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "protected-files",
+          "detail": "frozen file deleted: pilot/08-intervals/SPEC.md"
+        }
+      ]
+    },
+    {
+      "case": "negative: allowed implementation deleted",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "allowlist",
+          "detail": "implementation_changed requires an existing, retained file: pilot/08-intervals/intervals.py"
+        },
+        {
+          "check": "protected-files",
+          "detail": "frozen file deleted: pilot/08-intervals/intervals.py"
+        }
+      ]
+    },
+    {
+      "case": "negative: evidence_added cannot authorize historical evidence rewrite",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "allowlist",
+          "detail": "evidence_added cannot rewrite an existing file: pilot/08-intervals/evidence/midtask-tests.txt"
+        },
+        {
+          "check": "protected-files",
+          "detail": "protected bytes changed: pilot/08-intervals/evidence/midtask-tests.txt"
+        }
+      ]
+    },
+    {
+      "case": "negative: missing frozen_files",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "protected-files",
+          "detail": "both file snapshots are required"
+        }
+      ]
+    },
+    {
+      "case": "negative: missing candidate_files",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "protected-files",
+          "detail": "both file snapshots are required"
+        }
+      ]
+    },
+    {
+      "case": "negative: missing allowlist",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "allowlist",
+          "detail": "an explicit Allowlist is required"
+        }
+      ]
+    },
+    {
+      "case": "negative: actual state file differs from replay/state argument",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "allowlist",
+          "detail": "candidate state file differs from replayed state"
+        }
+      ]
+    },
+    {
+      "case": "negative: actual log file differs from log argument",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "allowlist",
+          "detail": "candidate log file differs from supplied history"
+        }
+      ]
+    },
+    {
+      "case": "negative: HANDOFF differs from canonical rendering",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "allowlist",
+          "detail": "candidate HANDOFF.md differs from canonical rendering"
+        }
+      ]
+    },
+    {
+      "case": "negative: implementation allowlist cannot override structural rendering",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "allowlist",
+          "detail": "allowlist categories must be disjoint from structural files"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate HANDOFF.md differs from canonical rendering"
+        }
+      ]
+    },
+    {
+      "case": "negative: missing structural state file",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "protected-files",
+          "detail": "frozen file deleted: pilot/08-intervals/handoff-state.json"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate structural files missing: pilot/08-intervals/handoff-state.json"
+        }
+      ]
+    },
+    {
+      "case": "negative: frozen raw log prefix newline mutation",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "history-preserved",
+          "detail": "frozen record 0 differs in candidate history: rewritten history"
+        },
+        {
+          "check": "protected-files",
+          "detail": "frozen log byte prefix changed"
+        }
+      ]
+    },
+    {
+      "case": "negative: canonical rejection receipt appended to accepted history",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "chain-replay",
+          "detail": "accepted history contains a non-accepted record"
+        }
+      ]
+    },
+    {
+      "case": "positive: canonical accepted fourth record",
+      "expected": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "case": "negative: canonical later record with skipped sequence",
+      "expected": false,
+      "passed": false,
+      "failures": [
+        {
+          "check": "chain-replay",
+          "detail": "canonical v0.1 replay failed: quarantine: sequence mismatch at line 4"
+        },
+        {
+          "check": "allowlist",
+          "detail": "candidate state file differs from replayed state"
+        }
+      ]
+    }
+  ],
+  "entire_existing_08_subtree_unchanged": true,
+  "original_08_protected_manifest_digests_verified": 28,
+  "original_08_FREEZE_unchanged": true,
+  "09_frozen_spec_tests_evidence_and_accepted_artifacts_unchanged": true,
+  "implementation_sha256": "672f46724b5ea8a4f2bc535f65f29d801997d88be8d065de62a4a9c1489f4e17"
+}
