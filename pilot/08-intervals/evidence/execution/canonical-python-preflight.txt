@@ -1,0 +1,16 @@
+=== 3a. WITHOUT admission (must reject) ===
+validation_result: reject
+  FAIL: explicit admitter
+  FAIL: explicit admission decision
+  FAIL: admitter matches authority_owner (exact)
+  FAIL: action outside mandate
+  FAIL: state change without evidence
+state/hash unchanged: True; sequence not advanced: True
+=== 3b. WITH clearly hypothetical owner declaration (must accept) ===
+validation_result: accept
+failing checks: none
+candidate hash: sha256:685c7798ced9b7a0d13d9bd8dc1713efcff1c22060e4be0cc021c62bfc392436
+matches JS-port 685c7798...: True
+=== 3c. replay/receipt verification clean ===
+all replays clean: True
+AGREEMENT: canonical Python validation agrees with the JS-port preflight.
