@@ -1,0 +1,13 @@
+# '+' (U+002B) evidence search — 2026-10-03
+
+Searched for the plus character in:
+- SPEC.md
+- tests/test_pctdecode.py
+- evidence/probe-wellformed.txt
+- evidence/probe-malformed.txt
+
+Result: exactly one match — SPEC.md's Scope section, which mentions '+'
+only to declare its decoding unresolved and requiring owner decision.
+
+No fixture, probe, or test exercises '+' behavior. No frozen artifact
+establishes what '+' should decode to.
