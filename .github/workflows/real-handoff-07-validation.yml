@@ -1,159 +1,18 @@
-name: REAL-HANDOFF-07 isolated validation
+name: REAL-HANDOFF-07 final proposal preflight
 on:
   push:
     branches: [codex/real-handoff-07-validation]
 permissions:
   contents: read
 jobs:
-  validate:
+  preflight:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: b31818ba97d91deb77f6544c3c33a5ead77d302c
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Frozen task acceptance
-        run: python -B -m unittest discover -s pilot/07-stats/tests -v
-      - name: Existing Handoff State suite
-        if: always()
-        run: python -B -m unittest discover -s handoff/tests -v
-      - name: Chain, supersession, and proposal checks
-        if: success()
-        run: |
-          python -B - <<'PY'
-          import hashlib
-          import json
-          import subprocess
-          import sys
-          import tempfile
-          from copy import deepcopy
-          from pathlib import Path
-          
-          from handoff.canonical import canonical_json, loads, state_hash
-          from handoff.core import evaluate, verify_record
-          from handoff.store import append, replay
-          
-          root = Path.cwd()
-          task = root / "pilot/07-stats"
-          state_path = task / "handoff-state.json"
-          log_path = task / "handoff-transition.jsonl"
-          protected = {
-              str(path.relative_to(root)): path.read_bytes()
-              for path in root.rglob("*")
-              if path.is_file() and ".git" not in path.parts
-              and path.relative_to(root).parts[0] in {
-                  "handoff", "pilot"
-              }
-              and path != task / "stats.py"
-              and "__pycache__" not in path.parts
-          }
-          prior = loads(state_path.read_text(encoding="utf-8"))
-          records = [loads(line) for line in log_path.read_text(encoding="utf-8").splitlines()]
-          assert len(records) == 2
-          expected_hashes = [
-              "sha256:2a2eadac6d3acf171250a45aac5542e53345549b81e3d060419e613eeab7301d",
-              "sha256:90d4553808ac86b086fd26086f3a405c8430dee58404333f656d50838d80b587",
-          ]
-          accepted = None
-          for seq, record in enumerate(records, 1):
-              assert record["seq"] == seq
-              assert not verify_record(accepted, record)
-              receipt = evaluate(accepted, record["proposed_delta"], record["admission"], seq=seq)
-              assert receipt["transition"]["validation"]["result"] == "accept"
-              assert receipt["transition"]["resulting_state_hash"] == expected_hashes[seq - 1]
-              accepted = receipt["state"]
-          assert accepted == prior == replay(log_path)["state"]
-          assert prior["current_state"] == "MID_TASK_STRICT_INPUT"
-          assert state_hash(prior) == expected_hashes[-1]
-          assert (task / "HANDOFF.md").read_text(encoding="utf-8") == records[-1]["rendered_prose"]
-          assert (task / "evidence/seq1-handoff.md").read_text(encoding="utf-8") == records[0]["rendered_prose"]
-          evidence_paths = {
-              "spec": "SPEC.md",
-              "tests": "tests/test_stats.py",
-              "seq1_impl": "evidence/seq1-implementation.py",
-              "seq1_tests": "evidence/seq1-midtask-tests.txt",
-              "seq1_handoff": "evidence/seq1-handoff.md",
-              "owner_decision": "evidence/owner-decision.md",
-              "midtask_tests": "evidence/midtask-tests.txt",
-          }
-          for key, path in evidence_paths.items():
-              assert hashlib.sha256((task / path).read_bytes()).hexdigest() == prior["identifiers"]["shas"][key]
-          print("CHAIN: both accepted sequences and hashes verified; seq 2 authoritative; seq 1 preserved historically.")
-          
-          for text in ("1,2\n", "1\n2,3\n", ",\n", "1\nabc\n2\n"):
-              result = subprocess.run(
-                  [sys.executable, "-B", str(task / "stats.py")],
-                  input=text, text=True, capture_output=True, check=False,
-              )
-              assert result.returncode == 1
-              assert result.stderr == "BAD_INPUT\n"
-              assert result.stdout == ""
-          print("STRICT PATH: comma-separated inputs and malformed lines reject with BAD_INPUT, empty stdout, exit 1.")
-          
-          delta = {"current_state":{"from":"MID_TASK_STRICT_INPUT","to":"COMPLETE_STRICT_INPUT_PENDING_OWNER_ADMISSION"},"verified_facts":{"add":[{"fact":"Successor implementation completed the seq-2 strict input path: malformed non-empty lines, including comma-separated values, return nonzero with BAD_INPUT on stderr. Seq-1 broad input acceptance remains superseded; both accepted states remain valid historical evidence and seq 2 is still authoritative until owner admission.","evidence":"pilot/07-stats/stats.py at successor implementation commit; pilot/07-stats/evidence/owner-decision.md; pilot/07-stats/handoff-transition.jsonl seq 1 and seq 2"},{"fact":"The successor passed all 6 frozen task acceptance tests and the existing Handoff State suite. Passing the frozen tests alone does not establish historical authority; the accepted seq-2 hash linkage and owner narrowing decision establish it.","evidence":"REAL-HANDOFF-07 isolated validation run: exact commands and output to be linked after execution"}]},"next_permitted_actions":{"from":["Accept strictly one number per line; do not split on commas — the seq-1 broad-input action is superseded.","Implement BAD_INPUT: nonzero exit with 'BAD_INPUT' on stderr for malformed lines.","Make all 6 tests pass; do not modify the tests or SPEC.md."],"to":["Terrynce White may review the successor implementation and completion proposal; the proposal remains unaccepted until explicit owner admission.","Preserve strict one-number-per-line input; comma-separated acceptance remains superseded under the seq-2 owner decision.","Keep all accepted history, supersession evidence, owner decisions, unresolved questions, frozen artifacts, and stop conditions; do not merge, self-admit, or start Stage 3."]}}
-          # Both completion facts are proposed, supported by the preceding successful test steps.
-          delta["verified_facts"]["add"][0]["evidence"] = (
-              "pilot/07-stats/stats.py in this isolated validation commit; "
-              "pilot/07-stats/evidence/owner-decision.md; "
-              "pilot/07-stats/handoff-transition.jsonl seq 1 and seq 2"
-          )
-          delta["verified_facts"]["add"][1]["evidence"] = (
-              "This REAL-HANDOFF-07 isolated validation run: "
-              "python -B -m unittest discover -s pilot/07-stats/tests -v; "
-              "python -B -m unittest discover -s handoff/tests -v"
-          )
-          delta["identifiers.shas"] = {"add": {
-              "successor_stats_py": hashlib.sha256((task / "stats.py").read_bytes()).hexdigest()
-          }}
-          unadmitted = evaluate(prior, delta, {}, seq=3)
-          assert unadmitted["transition"]["validation"]["result"] == "reject"
-          assert unadmitted["state"] == prior
-          assert unadmitted["transition"]["prior_state_hash"] == expected_hashes[-1]
-          assert unadmitted["transition"]["resulting_state_hash"] == expected_hashes[-1]
-          print("UNADMITTED: rejected; accepted state and hash unchanged.")
-          
-          # Write only a disposable copy. The actual accepted log is never appended.
-          with tempfile.TemporaryDirectory() as directory:
-              copy_path = Path(directory) / "copied-history.jsonl"
-              copy_path.write_bytes(log_path.read_bytes())
-              original = copy_path.read_bytes()
-              rejected = append(copy_path, prior, delta, {})
-              assert rejected["transition"]["validation"]["result"] == "reject"
-              assert rejected["state"] == prior
-              assert copy_path.read_bytes().startswith(original)
-              copied_replay = replay(copy_path)
-              assert copied_replay["state"] == prior
-              assert copied_replay["transition"]["resulting_state_hash"] == expected_hashes[-1]
-          print("COPY-ONLY STORE CHECK: rejected attempt preserves full accepted history and accepted head.")
-          
-          # Hypothetical evaluator input ONLY. It is never appended or persisted as an admission.
-          hypothetical_admission = {
-              "by": "Terrynce White",
-              "decision": "admit",
-              "at": "2026-10-04T00:00:00+00:00",
-              "evidence": "HYPOTHETICAL PREFLIGHT ONLY: assumes future explicit owner admission; no actual owner admission occurred.",
-          }
-          candidate = evaluate(prior, delta, hypothetical_admission, seq=3)
-          assert candidate["transition"]["validation"]["result"] == "accept", candidate["transition"]["validation"]
-          assert not verify_record(prior, candidate["transition"])
-          for key in (
-              "authority_owner", "roles", "goal", "claims", "canonical_terms",
-              "frozen_invariants", "failed_or_superseded_paths", "open_questions",
-              "stop_conditions",
-          ):
-              assert candidate["state"][key] == prior[key]
-          assert candidate["state"]["verified_facts"][:len(prior["verified_facts"])] == prior["verified_facts"]
-          for group, identifiers in prior["identifiers"].items():
-              for key, value in identifiers.items():
-                  assert candidate["state"]["identifiers"][group][key] == value
-          assert state_path.read_bytes() == protected[str(state_path.relative_to(root))]
-          assert log_path.read_bytes() == protected[str(log_path.relative_to(root))]
-          assert replay(log_path)["state"] == prior
-          for path, content in protected.items():
-              assert (root / path).read_bytes() == content, path
-          print("HYPOTHETICAL OWNER PREFLIGHT: mechanically accepts; no append, persistence, or actual admission.")
-          print("PROTECTION: accepted state/history, supersession evidence, owner decisions, unresolved questions, and stop conditions unchanged.")
-          print("SUCCESSOR_STATS_SHA256:", delta["identifiers.shas"]["add"]["successor_stats_py"])
-          print("PROPOSED_DELTA:", canonical_json(delta))
-          
-          PY
+      - name: Exact unadmitted proposal preflight
+        run: python -B pilot/07-stats/evidence/successor-preflight.py
