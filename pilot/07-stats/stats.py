@@ -7,10 +7,7 @@ was superseded by owner decision 2026-10-03
 (handoff-transition.jsonl seq 2); the seq-1 handoff in
 evidence/seq1-handoff.md is history, not current mandate.
 
-MID-TASK STATE: strict parsing works (5/6 pass). BAD_INPUT handling NOT
-done: a malformed line currently raises ValueError instead of the
-spec-required nonzero exit with BAD_INPUT on stderr (test_bad_input
-fails).
+Malformed non-empty lines exit nonzero with BAD_INPUT on stderr.
 """
 import json
 import sys
@@ -23,7 +20,11 @@ def main():
         if not line:
             continue
         # SEQ-2: strict — no comma splitting (cf. superseded seq-1 action).
-        nums.append(float(line))
+        try:
+            nums.append(float(line))
+        except ValueError:
+            sys.stderr.write("BAD_INPUT\n")
+            return 1
     sys.stdout.write(json.dumps({"count": len(nums), "sum": sum(nums)}))
     return 0
 
