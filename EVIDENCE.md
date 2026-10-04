@@ -22,11 +22,11 @@ schemas untouched:
 
 | # | Task dir | Classification | Accepted head | Records |
 |---|---|---|---|---|
-| 01R | — (record: `~/workspace/handoff-state-001-pilot/REAL-HANDOFF-01R/`) | PASS | — | — |
-| 02 | `pilot/02-csv2json` | PASS_EXECUTION_AND_AUTHORITY; CONTEXT_ISOLATION: PASS | `sha256:022f8d9898f13…` | 2 |
+| 01R | — (not materialized as a pilot directory in this repository) | PASS — grammar-conforming replay result in the Stage-2 session/research record | — | — |
+| 02 | `pilot/02-csv2json` | PASS_EXECUTION_AND_AUTHORITY; CONTEXT_ISOLATION: UNRESOLVED | `sha256:022f8d9898f13…` | 2 |
 | 03 | `pilot/03-wordfreq` | PASS_EXECUTION_AND_AUTHORITY; CONTEXT_ISOLATION: PASS | `sha256:9cda855a56833…` | 2 |
 | 04 | `pilot/04-toposort` | PASS_EXECUTION_AND_AUTHORITY; CONTEXT_ISOLATION: PASS | `sha256:6ae26989b44b6…` | 2 |
-| 05 | `pilot/05-dedup` | ARTIFACT_CONFLICT — frozen inconclusive, not a pass; redone as 05R | `sha256:18033310d74c8…` | 1 |
+| 05 | `pilot/05-dedup` | INCONCLUSIVE_ARTIFACT_CONFLICT — frozen inconclusive, not a pass; 05R is the repaired passing experiment | `sha256:18033310d74c8…` | 1 |
 | 05R | `pilot/05R-dedup` | PASS | `sha256:1aa5d7dc887d5…` | 2 |
 | 06 | `pilot/06-pctdecode` | PASS_EXECUTION_AND_AUTHORITY; CONTEXT_ISOLATION: PASS | `sha256:8ac7192ca55d5…` | 2 |
 | 07 | `pilot/07-stats` | PASS_EXECUTION_AND_AUTHORITY; CONTEXT_ISOLATION: PASS; STALE_STATE_RESISTANCE: PASS | `sha256:a9bde6d2e3f87…` | 3 |
