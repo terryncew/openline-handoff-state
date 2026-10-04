@@ -6,8 +6,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
-from handoff.canonical import loads, same, state_hash
-from handoff.core import evaluate, verify_record
+from handoff.canonical import loads, state_hash
+from handoff.core import evaluate, same, verify_record
 from handoff.store import replay
 
 task = ROOT / "pilot/07-stats"
