@@ -1,4 +1,4 @@
-"""Interval union. Partial admitted path A: validation, filtering, and sorting."""
+"""Interval union via admitted path A: validation, sorting, and accumulation."""
 
 
 def merge_intervals(intervals):
@@ -13,5 +13,10 @@ def merge_intervals(intervals):
         if item[0] < item[1]:
             ordered.append(item.copy())
     ordered.sort()
-    # Remaining accepted work: one accumulator merging overlaps and touching ends.
-    return ordered
+    merged = []
+    for interval in ordered:
+        if merged and interval[0] <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], interval[1])
+        else:
+            merged.append(interval)
+    return merged
