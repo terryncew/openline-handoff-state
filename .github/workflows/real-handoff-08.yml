@@ -1,0 +1,36 @@
+name: REAL-HANDOFF-08 frozen preflight
+on:
+  pull_request:
+    paths:
+      - 'AGENTS.md'
+      - 'pilot/08-intervals/**'
+      - '.github/workflows/real-handoff-08.yml'
+permissions:
+  contents: read
+jobs:
+  frozen-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify preserved authority and applicable implementation checkpoint
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          import subprocess
+          import sys
+          task = Path("pilot/08-intervals")
+          manifest = json.loads((task / "FREEZE.json").read_text(encoding="utf-8"))
+          active = "pilot/08-intervals/intervals.py"
+          initial = hashlib.sha256(Path(active).read_bytes()).hexdigest() == manifest["artifact_sha256"][active]
+          arguments = [] if initial else ["--after-execution"]
+          subprocess.run([sys.executable, str(task / "verify_freeze.py"), *arguments], check=True)
+          PY

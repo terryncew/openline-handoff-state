@@ -1,0 +1,13 @@
+test_empty_and_zero_length (test_intervals.IntervalTests.test_empty_and_zero_length) ... ok
+test_input_not_mutated (test_intervals.IntervalTests.test_input_not_mutated) ... ok
+test_invalid_input (test_intervals.IntervalTests.test_invalid_input) ... ok
+test_negative_and_large_endpoints (test_intervals.IntervalTests.test_negative_and_large_endpoints) ... ok
+test_nesting_and_duplicates (test_intervals.IntervalTests.test_nesting_and_duplicates) ... ok
+test_overlapping_chain (test_intervals.IntervalTests.test_overlapping_chain) ... ok
+test_touching_chain (test_intervals.IntervalTests.test_touching_chain) ... ok
+test_unordered_disjoint (test_intervals.IntervalTests.test_unordered_disjoint) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests (elapsed time omitted)
+
+OK

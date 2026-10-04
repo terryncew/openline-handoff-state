@@ -1,0 +1,7 @@
+{
+  "accepted_log_sha256": "844d2c50886054362ae612ae6a73392089f899abcffc8de8621c131598427f8c",
+  "accepted_seq": 2,
+  "accepted_state_hash": "sha256:01775d0cf6945f0cab6c5facd91d382d353486c468fa7bb58e079fe47eb9030e",
+  "authorized_at": "2026-10-04T03:16:58.737887+00:00",
+  "partial_admitted_at": "2026-10-04T03:16:58.965359+00:00"
+}
