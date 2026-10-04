@@ -1,0 +1,49 @@
+Source: https://github.com/terryncew/openline-handoff-state/actions/runs/37170638939/job/111342719691
+Verification commit: fb762bc9641808ea8cbe2a7180d62083b4f22b5e
+Successor implementation commit: 05c2af845d224efcaf41eb5058e24d3595cc4633
+pctdecode.py sha256: 8b22e6b3a814e6719d53bbbe9e2bd8ebc9fb44de296d164ff159c7d47b5030d1
+Runtime: CPython 3.12.14 on Ubuntu 24.04.5
+Transcript: test output extracted from the job log; timestamp prefixes removed.
+Command: python -m unittest discover -s handoff/tests -v
+Exit status: 0 (step conclusion: success)
+
+test_candidate_cannot_appoint_its_own_authority (test_handoff.HandoffTests.test_candidate_cannot_appoint_its_own_authority) ... ok
+test_contradiction_quarantined_without_reconciliation (test_handoff.HandoffTests.test_contradiction_quarantined_without_reconciliation) ... ok
+test_exact_sha_path_status_round_trip_and_determinism (test_handoff.HandoffTests.test_exact_sha_path_status_round_trip_and_determinism) ... ok
+test_frozen_modification_rejected (test_handoff.HandoffTests.test_frozen_modification_rejected) ... ok
+test_frozen_schema_unchanged (test_handoff.HandoffTests.test_frozen_schema_unchanged) ... ok
+test_missing_admitter_cannot_default_to_agent (test_handoff.HandoffTests.test_missing_admitter_cannot_default_to_agent) ... ok
+test_negative_result_and_uncertainty_survive_unrelated_delta (test_handoff.HandoffTests.test_negative_result_and_uncertainty_survive_unrelated_delta) ... ok
+test_new_term_with_explicit_owner_admission_accepted (test_handoff.HandoffTests.test_new_term_with_explicit_owner_admission_accepted) ... ok
+test_new_term_without_admission_rejected_and_retained (test_handoff.HandoffTests.test_new_term_without_admission_rejected_and_retained) ... ok
+test_open_to_fact_without_evidence_rejected (test_handoff.HandoffTests.test_open_to_fact_without_evidence_rejected) ... ok
+test_other_named_validator_checks (test_handoff.HandoffTests.test_other_named_validator_checks) ... ok
+test_principal_matching_is_exact_and_worker_cannot_self_admit (test_handoff.HandoffTests.test_principal_matching_is_exact_and_worker_cannot_self_admit) ... ok
+test_rejected_genesis_is_diagnostic_only (test_handoff.HandoffTests.test_rejected_genesis_is_diagnostic_only) ... ok
+test_reported_semantic_conflict_can_only_force_quarantine (test_handoff.HandoffTests.test_reported_semantic_conflict_can_only_force_quarantine) ... ok
+test_required_evidence_ceiling_owner_and_unknown_fields (test_handoff.HandoffTests.test_required_evidence_ceiling_owner_and_unknown_fields) ... ok
+test_stale_and_concurrent_writers_cannot_both_advance (test_handoff.HandoffTests.test_stale_and_concurrent_writers_cannot_both_advance) ... ok
+test_tampered_records_and_incomplete_tail_quarantined (test_handoff.HandoffTests.test_tampered_records_and_incomplete_tail_quarantined) ... ok
+test_terminal_statuses_cannot_be_promoted (test_handoff.HandoffTests.test_terminal_statuses_cannot_be_promoted) ... ok
+test_two_transitions_chain_and_reject_quarantine_attempts_remain_proposed (test_handoff.HandoffTests.test_two_transitions_chain_and_reject_quarantine_attempts_remain_proposed) ... ok
+test_unauthorized_term_rename_and_definition_change_rejected (test_handoff.HandoffTests.test_unauthorized_term_rename_and_definition_change_rejected) ... ok
+test_valid_fixture_delta_is_accepted_with_real_hashes (test_handoff.HandoffTests.test_valid_fixture_delta_is_accepted_with_real_hashes) ... ok
+test_add_cannot_disguise_a_definition_rewrite (test_strict_inputs.StrictInputs.test_add_cannot_disguise_a_definition_rewrite) ... ok
+test_cli_accept_reject_and_quarantine_exit_codes (test_strict_inputs.StrictInputs.test_cli_accept_reject_and_quarantine_exit_codes) ... ok
+test_conditional_admission_cannot_accept (test_strict_inputs.StrictInputs.test_conditional_admission_cannot_accept) ... ok
+test_corrupt_utf8_log_is_quarantined_without_append (test_strict_inputs.StrictInputs.test_corrupt_utf8_log_is_quarantined_without_append) ... ok
+test_cycles_are_clear_errors (test_strict_inputs.StrictInputs.test_cycles_are_clear_errors) ... ok
+test_duplicate_keys_nonfinite_and_unpaired_surrogates_rejected (test_strict_inputs.StrictInputs.test_duplicate_keys_nonfinite_and_unpaired_surrogates_rejected) ... ok
+test_json_boolean_is_not_integer_in_from_guard (test_strict_inputs.StrictInputs.test_json_boolean_is_not_integer_in_from_guard) ... ok
+test_json_schema_field_set_matches_frozen_state (test_strict_inputs.StrictInputs.test_json_schema_field_set_matches_frozen_state) ... ok
+test_malformed_validation_is_a_clear_verification_error (test_strict_inputs.StrictInputs.test_malformed_validation_is_a_clear_verification_error) ... ok
+test_nonobject_transition_inputs_are_clear_reject_errors (test_strict_inputs.StrictInputs.test_nonobject_transition_inputs_are_clear_reject_errors) ... ok
+test_parent_child_delta_overlap_is_rejected (test_strict_inputs.StrictInputs.test_parent_child_delta_overlap_is_rejected) ... ok
+test_raw_seed_is_not_trusted_as_generated_prose (test_strict_inputs.StrictInputs.test_raw_seed_is_not_trusted_as_generated_prose) ... ok
+test_template_drift_and_added_prose_rejected (test_strict_inputs.StrictInputs.test_template_drift_and_added_prose_rejected) ... ok
+test_unicode_line_separators_remain_data_in_jsonl (test_strict_inputs.StrictInputs.test_unicode_line_separators_remain_data_in_jsonl) ... ok
+
+----------------------------------------------------------------------
+Ran 35 tests in 0.659s
+
+OK
