@@ -1,22 +1,23 @@
-name: REAL-HANDOFF-08 setup
+name: REAL-HANDOFF-08 frozen preflight
 on:
   pull_request:
     paths:
+      - 'AGENTS.md'
       - 'pilot/08-intervals/**'
       - '.github/workflows/real-handoff-08.yml'
 permissions:
   contents: read
 jobs:
-  freeze:
+  frozen-preflight:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Evaluate newer B without owner admission against preserved A
+      - name: Verify frozen accepted chain, newer unadmitted B, and behavior evidence
         env:
           PYTHONDONTWRITEBYTECODE: '1'
-          PROPOSAL_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          PROPOSAL_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: python pilot/08-intervals/setup/build_b.py
+        run: python pilot/08-intervals/verify_freeze.py
