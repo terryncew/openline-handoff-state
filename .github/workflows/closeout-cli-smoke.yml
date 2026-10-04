@@ -1,0 +1,62 @@
+name: Closeout CLI smoke
+
+on:
+  push:
+    paths:
+      - '.github/workflows/closeout-cli-smoke.yml'
+      - 'handoff/**'
+      - 'pilot/10-cli/**'
+      - 'pilot/09-closeout-verifier/tests/**'
+  pull_request:
+    paths:
+      - '.github/workflows/closeout-cli-smoke.yml'
+      - 'handoff/**'
+      - 'pilot/10-cli/**'
+      - 'pilot/09-closeout-verifier/tests/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Frozen REAL-HANDOFF-10 acceptance
+        run: python -m unittest discover -s pilot/10-cli/tests -v
+      - name: Full Handoff State suite including historical replay
+        run: python -m unittest discover -s handoff/tests -v
+      - name: REAL-HANDOFF-09 verifier acceptance
+        run: python -m unittest discover -s pilot/09-closeout-verifier/tests -v
+      - name: Verify real admitted REAL-HANDOFF-08 closeout through the CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m handoff verify-closeout \
+            --frozen-ref c45b3c611ecb496d6facc62643f0d685fe039f2a \
+            --candidate-ref bd58f07fdad7076783f3dffaa28ca1fa1b4060a0 \
+            --task-dir pilot/08-intervals \
+            --owner 'Terrynce White' \
+            --allow-implementation-changed pilot/08-intervals/intervals.py \
+            --allow-evidence-added pilot/08-intervals/evidence/execution/canonical-python-preflight.txt \
+            --allow-evidence-added pilot/08-intervals/evidence/execution/closeout-ci-record.md \
+            > closeout-cli-result.json
+          cat closeout-cli-result.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("closeout-cli-result.json").read_text(encoding="utf-8"))
+          required = {"passed", "failures", "checks_run", "file_checks",
+                      "frozen_ref", "candidate_ref", "task_dir", "authority_owner"}
+          assert required <= report.keys(), report
+          assert report["passed"] is True and report["failures"] == [], report
+          assert report["file_checks"] == "passed", report
+          PY
