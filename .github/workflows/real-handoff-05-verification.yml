@@ -1,0 +1,106 @@
+name: REAL-HANDOFF-05 unchanged-state verification
+on:
+  push:
+    branches: [codex/real-handoff-05-verify-20261004]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Confirm exact starting parent and unchanged protected artifacts
+        run: |
+          test "$(git rev-parse HEAD^)" = "3ccb4c880e8c2d6c46b317fc72e953028dfce059"
+          git diff --exit-code 3ccb4c880e8c2d6c46b317fc72e953028dfce059 HEAD -- . ':(exclude).github/workflows/real-handoff-05-verification.yml'
+      - name: Frozen task acceptance tests (unchanged starting implementation)
+        continue-on-error: true
+        run: python -m unittest discover -s pilot/05-dedup/tests -v
+      - name: Existing Handoff State suite
+        run: python -m unittest discover -s handoff/tests -v
+      - name: Unadmitted blockage proposal and hypothetical preflight
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import tempfile
+          from pathlib import Path
+          from handoff.canonical import state_hash
+          from handoff.core import evaluate
+          from handoff.store import append, replay
+          
+          task = Path("pilot/05-dedup")
+          state_path = task / "handoff-state.json"
+          history_path = task / "handoff-transition.jsonl"
+          state_bytes = state_path.read_bytes()
+          history_bytes = history_path.read_bytes()
+          prior = json.loads(state_bytes)
+          head = replay(history_path)
+          expected_hash = "sha256:18033310d74c8c0b38fbd9d36df50fd683069bd494ce61a5699126894523e587"
+          assert head["state"] == prior
+          assert state_hash(prior) == expected_hash
+          assert head["transition"]["seq"] == 1
+          
+          delta = json.loads("{\"current_state\":{\"from\":\"MID_TASK_EXACT_DEDUP_DONE\",\"to\":\"BLOCKED_BY_FROZEN_ARTIFACT_CONFLICT\"},\"verified_facts\":{\"add\":[{\"fact\":\"Frozen test_no_trailing_newline requires the final unterminated 'a' to be suppressed after 'a\\\\n', while the admitted path requires raw-line comparison and prohibits any normalized matching; no successor implementation was made.\",\"evidence\":\"pilot/05-dedup/tests/test_dedup.py:test_no_trailing_newline; pilot/05-dedup/evidence/considered-paths.md:Path A; pilot/05-dedup/handoff-state.json:stop_conditions; starting commit 3ccb4c880e8c2d6c46b317fc72e953028dfce059\"}]},\"open_questions\":{\"add\":[{\"owner\":\"Terrynce White\",\"question\":\"Resolve the conflict between test_no_trailing_newline and the admitted raw-line comparison / no-normalized-matching constraint. Does owner-authorized line identity exclude the LF terminator? No semantic change is authorized by this proposal.\"}]}}")
+          # This is a blockage proposal, not a completion claim.
+          unadmitted = evaluate(prior, delta, {}, seq=2, semantic_conflict=True)
+          assert unadmitted["transition"]["validation"]["result"] == "reject"
+          assert unadmitted["state"] == prior
+          assert unadmitted["transition"]["resulting_state_hash"] == expected_hash
+          with tempfile.TemporaryDirectory() as temp_dir:
+              temp_log = Path(temp_dir) / "verification-only.jsonl"
+              temp_log.write_bytes(history_bytes)
+              receipt = append(temp_log, prior, delta, {}, semantic_conflict=True)
+              assert receipt["transition"]["seq"] == 2
+              assert receipt["transition"]["validation"]["result"] == "reject"
+              replayed = replay(temp_log)
+              assert replayed["state"] == prior
+              assert replayed["transition"]["resulting_state_hash"] == expected_hash
+              assert temp_log.read_bytes().startswith(history_bytes)
+          
+          # Dry-run only: no append, no accepted-state write, no actual owner admission.
+          hypothetical_admission = {
+              "by": "Terrynce White",
+              "decision": "admit",
+              "at": "2026-10-04T00:00:00+00:00",
+              "evidence": "HYPOTHETICAL PREFLIGHT ONLY: no actual owner admission"
+          }
+          hypothetical = evaluate(prior, delta, hypothetical_admission, seq=2, semantic_conflict=True)
+          assert hypothetical["transition"]["validation"]["result"] == "quarantine"
+          assert hypothetical["state"] == prior
+          assert hypothetical["transition"]["resulting_state_hash"] == expected_hash
+          failures = [check["check"] for check in hypothetical["transition"]["validation"]["checks"] if not check["pass"]]
+          assert failures == ["semantic conflict"]
+          candidate_questions = prior["open_questions"] + delta["open_questions"]["add"]
+          assert candidate_questions[:len(prior["open_questions"])] == prior["open_questions"]
+          assert state_path.read_bytes() == state_bytes
+          assert history_path.read_bytes() == history_bytes
+          protected_sha256 = {
+              str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+              for path in [
+                  task / "SPEC.md", task / "tests/test_dedup.py",
+                  task / "dedup.py", task / "evidence/considered-paths.md",
+                  task / "evidence/midtask-tests.txt", state_path, history_path,
+                  task / "HANDOFF.md",
+              ]
+          }
+          print(json.dumps({
+              "proposal_kind": "BLOCKAGE, NOT COMPLETION",
+              "unadmitted_result": "reject",
+              "without_admission_state_unchanged": True,
+              "without_admission_hash": expected_hash,
+              "temporary_log_replay_state_unchanged": True,
+              "temporary_log_attempt_seq": 2,
+              "accepted_repository_transition_seq": 1,
+              "hypothetical_owner_preflight_result": "quarantine",
+              "hypothetical_owner_preflight_failed_checks": failures,
+              "hypothetical_owner_other_mechanical_checks_pass": True,
+              "actual_admission_performed": False,
+              "protected_sha256": protected_sha256
+          }, sort_keys=True, indent=2))
+          PY
