@@ -1,0 +1,189 @@
+{
+  "task_id": "REAL-HANDOFF-08",
+  "proposal": "pilot/08-intervals/evidence/execution/completion-proposal.json",
+  "proposal_canonical_sha256": "68470376add18218a456f22d4f3280217d7f3ef5f70a476cb3538d2c2ca7929f",
+  "method": "Restricted in-memory JavaScript port of committed handoff/core.py, canonical.py, schema.py, render.py at exact starting commit; independently executed by authority audit agent. Not execution of Python tooling or verify_record.",
+  "calibration": {
+    "accepted_seq1_entire_record_and_rendering": "matched",
+    "accepted_seq2_entire_record_and_rendering": "matched",
+    "b_rejection_entire_state_and_transition": "matched"
+  },
+  "prior_accepted_seq": 2,
+  "prior_accepted_state_hash": "sha256:01775d0cf6945f0cab6c5facd91d382d353486c468fa7bb58e079fe47eb9030e",
+  "candidate_state_hash": "sha256:685c7798ced9b7a0d13d9bd8dc1713efcff1c22060e4be0cc021c62bfc392436",
+  "candidate_schema_errors": [],
+  "attempt_seq": 3,
+  "attempt_is_part_of_accepted_history": false,
+  "without_owner_admission": {
+    "admission": {},
+    "validation_result": "reject",
+    "checks": [
+      {
+        "check": "schema valid",
+        "pass": true
+      },
+      {
+        "check": "delta valid",
+        "pass": true
+      },
+      {
+        "check": "explicit admitter",
+        "pass": false
+      },
+      {
+        "check": "explicit admission decision",
+        "pass": false
+      },
+      {
+        "check": "admitter matches authority_owner (exact)",
+        "pass": false
+      },
+      {
+        "check": "OPEN→FACT without evidence",
+        "pass": true
+      },
+      {
+        "check": "FROZEN invariant modified",
+        "pass": true
+      },
+      {
+        "check": "SHA/path/status changed",
+        "pass": true
+      },
+      {
+        "check": "renamed canonical concept",
+        "pass": true
+      },
+      {
+        "check": "new canonical term without admission",
+        "pass": true
+      },
+      {
+        "check": "claim exceeds cited experiment",
+        "pass": true
+      },
+      {
+        "check": "omitted negative result",
+        "pass": true
+      },
+      {
+        "check": "action outside mandate",
+        "pass": false
+      },
+      {
+        "check": "state change without evidence",
+        "pass": false
+      },
+      {
+        "check": "semantic conflict",
+        "pass": true
+      },
+      {
+        "check": "accepted evidence and questions preserved",
+        "pass": true
+      }
+    ],
+    "returned_state_unchanged": true,
+    "resulting_state_hash": "sha256:01775d0cf6945f0cab6c5facd91d382d353486c468fa7bb58e079fe47eb9030e",
+    "accepted_sequence_advanced": false
+  },
+  "hypothetical_owner_admission_preflight": {
+    "counterfactual_only": true,
+    "admission_was_actually_supplied": false,
+    "declaration_for_evaluation": {
+      "decision": "admit",
+      "by": "Terrynce White",
+      "at": "2026-10-04T04:00:00+00:00",
+      "evidence": "COUNTERFACTUAL EVALUATION ONLY; no owner admission was supplied."
+    },
+    "validation_result": "accept",
+    "checks": [
+      {
+        "check": "schema valid",
+        "pass": true
+      },
+      {
+        "check": "delta valid",
+        "pass": true
+      },
+      {
+        "check": "explicit admitter",
+        "pass": true
+      },
+      {
+        "check": "explicit admission decision",
+        "pass": true
+      },
+      {
+        "check": "admitter matches authority_owner (exact)",
+        "pass": true
+      },
+      {
+        "check": "OPEN→FACT without evidence",
+        "pass": true
+      },
+      {
+        "check": "FROZEN invariant modified",
+        "pass": true
+      },
+      {
+        "check": "SHA/path/status changed",
+        "pass": true
+      },
+      {
+        "check": "renamed canonical concept",
+        "pass": true
+      },
+      {
+        "check": "new canonical term without admission",
+        "pass": true
+      },
+      {
+        "check": "claim exceeds cited experiment",
+        "pass": true
+      },
+      {
+        "check": "omitted negative result",
+        "pass": true
+      },
+      {
+        "check": "action outside mandate",
+        "pass": true
+      },
+      {
+        "check": "state change without evidence",
+        "pass": true
+      },
+      {
+        "check": "semantic conflict",
+        "pass": true
+      },
+      {
+        "check": "accepted evidence and questions preserved",
+        "pass": true
+      }
+    ],
+    "candidate_resulting_state_hash": "sha256:685c7798ced9b7a0d13d9bd8dc1713efcff1c22060e4be0cc021c62bfc392436",
+    "persisted_as_accepted": false
+  },
+  "preservation_checks": {
+    "unchanged_original_top_level_fields": 13,
+    "original_verified_fact_prefix": true,
+    "open_questions": true,
+    "failed_or_superseded_paths": true,
+    "all_original_values_in_all_five_identifier_groups": true,
+    "canonical_terms": true,
+    "stop_conditions": true,
+    "next_permitted_actions": true,
+    "authority_and_roles": true,
+    "existing_accepted_chain_and_proposal_artifacts": true
+  },
+  "actual_owner_admission": false,
+  "accepted_log_appended": false,
+  "limitations": [
+    "This port validates this exact well-formed JSON proposal only; excludes general float/unsafe integer handling, surrogate strings, duplicate-key parsing, malformed-input diagnostics and Python's broader datetime syntax.",
+    "Root supplied new execution evidence and digests; the preflight validates structural placement/preservation, not evidence truth or principal authentication.",
+    "Actual Python task tests and Handoff State suite passed in the existing workflows. Python completion-proposal validation was not executed."
+  ],
+  "reproduction_with_original_tooling_not_run_here": "PYTHONDONTWRITEBYTECODE=1 python -m handoff validate pilot/08-intervals/evidence/execution/completion-proposal.json (expected exit 2, reject; no append)"
+}
