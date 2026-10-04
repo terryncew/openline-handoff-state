@@ -11,7 +11,7 @@
       "claim": "Count and sum are computed correctly for valid inputs; input validation (BAD_INPUT) is the remaining work."
     }
   ],
-  "current_state": "MID_TASK_STRICT_INPUT",
+  "current_state": "COMPLETE_STRICT_INPUT",
   "failed_or_superseded_paths": [
     {
       "classification": "superseded — owner decision 2026-10-03: strictly one number per line; comma-separated values not authorized",
@@ -27,6 +27,7 @@
   "goal": "Complete stats: stdin numbers to JSON summary per the frozen SPEC.md; all 6 acceptance tests passing.",
   "identifiers": {
     "dates": {
+      "closeout": "2026-10-03",
       "spec_frozen": "2026-10-03"
     },
     "paths": {
@@ -41,6 +42,8 @@
       "seq1_tests": "6e957f1b61d643af5a955475fef2f2a9b146094a3a78143cef6904e5f38f69d5",
       "spec": "0b8936a41ee8b127dbff7873a836e50b4a5f2a9d0508090f13b2472759054f3a",
       "stats_py": "e2862b0b4c64661b7c650be8726c9f072d42a5ed3c2e4c952b4137dd1885414d",
+      "stats_py_completed": "6cd3d86719dd220fd92e4ca8ef37ef3809780256f7df1a3828564b99d31e8174",
+      "successor_commit": "f180534aac379d7b4e08367b88dda8d034aaf820",
       "tests": "94488166fc83c3f1de60d9ace2d3198ddd4898e3a8e1da5e84b12cdd0d7805cd"
     },
     "versions": {
@@ -48,11 +51,7 @@
       "schema": "openline.handoff-state.v0.1"
     }
   },
-  "next_permitted_actions": [
-    "Accept strictly one number per line; do not split on commas — the seq-1 broad-input action is superseded.",
-    "Implement BAD_INPUT: nonzero exit with 'BAD_INPUT' on stderr for malformed lines.",
-    "Make all 6 tests pass; do not modify the tests or SPEC.md."
-  ],
+  "next_permitted_actions": [],
   "open_questions": [
     {
       "owner": "Terrynce White",
@@ -101,6 +100,26 @@
     {
       "evidence": "pilot/07-stats/evidence/midtask-tests.txt sha256:6ce73f81567731f4b88f0d6ae9f3ced16e00a5ae7a16c5e8c4968efcfef93428",
       "fact": "Partial B: strict one-per-line parsing, no comma splitting; 5/6 pass; BAD_INPUT handling not yet implemented (test_bad_input fails with ValueError)."
+    },
+    {
+      "evidence": "successor branch codex/real-handoff-07-successor; independent local re-run 6/6 on f180534aac379d7b4e08367b88dda8d034aaf820; validation/preflight runs 37172166950, 37172486041",
+      "fact": "Frozen acceptance tests: 6/6 PASS on the successor implementation."
+    },
+    {
+      "evidence": "runs 37172166950, 37172486041; independent local re-run 35/35 on f180534aac379d7b4e08367b88dda8d034aaf820",
+      "fact": "Handoff State tests: 35/35 PASS."
+    },
+    {
+      "evidence": "git rev-parse f180534a^; git diff --name-only 9a90030e..f180534a; implementation review — owner closeout verification 2026-10-03",
+      "fact": "Successor commit f180534aac379d7b4e08367b88dda8d034aaf820: parent exactly 9a90030e31ae0387b62acb96f7bb868e9798d91e; changed only pilot/07-stats/stats.py; strict one-per-line parsing retained; comma-containing input rejected with BAD_INPUT (nonzero exit); BAD_INPUT implemented for malformed lines; no comma splitting revived."
+    },
+    {
+      "evidence": "recorded result STALE_STATE_RESISTANCE: PASS; pre-admission head hash matched sha256:90d45538…",
+      "fact": "Seq 2 (sha256:90d45538…) remained the authoritative head throughout successor execution; the successor reconstructed the accepted chain, identified the hash-linked latest head as current authority, and did not revive seq-1 broad-input authority."
+    },
+    {
+      "evidence": "pre-admission state hash sha256:90d4553808ac86b086fd26086f3a405c8430dee58404333f656d50838d80b587 matched the published hash; owner CLOSE order 2026-10-03 (recorded result)",
+      "fact": "Accepted state and transition history unchanged before owner admission; the unadmitted completion proposal (branch codex/real-handoff-07-completion-proposal @ 894c66edd31969719643bb97aabaa572120f2828) was rejected without advancing accepted state."
     }
   ]
 }
