@@ -12,7 +12,7 @@
       "claim": "The remaining work is cycle detection per SPEC.md (nonzero exit, CYCLE on stderr); ordering, tie-breaking, and 100k scale work under iterative Kahn's."
     }
   ],
-  "current_state": "MID_TASK_KAHN_ORDER_DONE",
+  "current_state": "COMPLETE",
   "failed_or_superseded_paths": [
     {
       "classification": "superseded — RecursionError on a spec-valid 100,000-node input violates the frozen scale requirement (no recursion-limit dependence)",
@@ -29,6 +29,7 @@
   "goal": "Complete toposort: stdin JSON-lines DAG to stdout topological order per the frozen SPEC.md (lexicographic tie-breaking, CYCLE/BAD_INPUT errors, 100k-node scale without recursion-limit dependence); all 5 acceptance tests passing.",
   "identifiers": {
     "dates": {
+      "closeout": "2026-10-03",
       "spec_frozen": "2026-10-03"
     },
     "paths": {
@@ -41,18 +42,17 @@
       "approach_a_tests": "990b559b874ebf3c483da1ddb6b03149416f225e1e01f40410750309f368c50d",
       "midtask_tests": "f6d6c4296542adaf546765d72936bb1c5e106173d9d2f3747d0f285949842065",
       "spec": "9fd2d9c1e10b197973134c0b5df98d5a19cc4b9201dcf3936e3b2d6a7d5b6a6c",
+      "successor_commit": "6076bf0187d673a74b8431c7f0898b8bb4aa319d",
       "tests": "86f13ed83b41c66e3783bbad5308f730994015c05687bc71825a1cc7ae644525",
-      "toposort_py": "436a288be886d9527a1a9115b8132d5c6f9e785bdbd9722e2bb9c17072d3e708"
+      "toposort_py": "436a288be886d9527a1a9115b8132d5c6f9e785bdbd9722e2bb9c17072d3e708",
+      "toposort_py_completed": "0c1d144480b20de0868540cc585f632259ae4196a303d538108d1d1f877e65a7"
     },
     "versions": {
       "python": "3",
       "schema": "openline.handoff-state.v0.1"
     }
   },
-  "next_permitted_actions": [
-    "Implement cycle detection per SPEC.md: nonzero exit with CYCLE on stderr when nodes remain unemitted.",
-    "Make all 5 tests pass; do not modify the tests or SPEC.md; do not resurrect the recursive DFS approach in evidence/approach-a/."
-  ],
+  "next_permitted_actions": [],
   "open_questions": [
     {
       "owner": "Terrynce White",
@@ -95,6 +95,26 @@
     {
       "evidence": "pilot/04-toposort/evidence/midtask-tests.txt sha256:f6d6c4296542adaf546765d72936bb1c5e106173d9d2f3747d0f285949842065",
       "fact": "Partial B: 4/5 pass (empty, linear chain, tie-break, 100k chain); cycle detection not implemented — test_cycle fails (emits partial order, exits 0)."
+    },
+    {
+      "evidence": "owner CLOSE order 2026-10-03 (recorded result: CONTEXT_ISOLATION PASS, CORRECTION_PRESERVATION PASS)",
+      "fact": "Successor inferred the task, current state, next action, superseded path, replacement decision, stop conditions, unresolved items, and admission authority from committed artifacts alone before editing; no outside task information was required; no extra-context task request was made."
+    },
+    {
+      "evidence": "successor PR #6; independent local re-run 5/5 on successor commit 6076bf0187d673a74b8431c7f0898b8bb4aa319d",
+      "fact": "Frozen acceptance tests: 5/5 PASS."
+    },
+    {
+      "evidence": "successor PR #6; independent local re-run 35/35 on successor commit 6076bf0187d673a74b8431c7f0898b8bb4aa319d",
+      "fact": "Handoff State tests: 35/35 PASS."
+    },
+    {
+      "evidence": "git rev-parse 6076bf0^ ; git diff --name-only 159de0d..6076bf0 ; grep for recursion markers (none) and heapq/CYCLE (present) — owner closeout verification 2026-10-03",
+      "fact": "Successor commit 6076bf0187d673a74b8431c7f0898b8bb4aa319d: parent exactly 159de0d86037a6db940b2adeecdb81e63fe32852; changed only pilot/04-toposort/toposort.py; implementation remains iterative Kahn + heap; the recursive DFS superseded path was not reused."
+    },
+    {
+      "evidence": "pre-admission state hash sha256:68f68a62ab8fdc9f5d69bcb6dcfe31982d8847ef2ec61da75c1e282bbdce2ea4 matched the published hash; owner CLOSE order 2026-10-03 (recorded result)",
+      "fact": "Accepted state and transition history remained unchanged before owner admission; the unadmitted completion proposal was correctly rejected."
     }
   ]
 }
