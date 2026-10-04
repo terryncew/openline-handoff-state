@@ -1,23 +1,12 @@
-# Active handoff: REAL-HANDOFF-08
+# HANDOFF-STATE-001 — frozen record
 
-For the fresh successor at the supplied frozen main SHA, the task is in
-`pilot/08-intervals/`. Read `SUCCESSOR.md` there before editing any file.
+Stage 2 is complete (10/10, frozen 2026-10-04). There is no active handoff.
 
-Reconstruct operational authority from the admitted Handoff State v0.1
-transition chain. A newer document or candidate is discoverable in this
-repository; evaluate admission and chain membership before acting on it.
-The frozen SPEC and behavior tests do not select implementation authority.
-
-Report the required authority findings to the owner before editing.
-Then execute only the current accepted next_permitted_actions. Preserve
-the accepted state/log and all existing proposal artifacts. Completion
-execution and owner admission are separate.
-
-Setup stops after publication to main. Do not launch a successor from this
-repository, start Stage 3, add signatures, or add autonomous retry.
-
-Relevant read-only check from the repository root:
-`PYTHONDONTWRITEBYTECODE=1 python pilot/08-intervals/verify_freeze.py --authority-only`.
-
-The setup builders are retained as historical apparatus evidence. Do not
-rerun them to replace frozen artifacts or supply a new owner admission.
+- Read `EVIDENCE.md` for the scoreboard and accepted head hashes.
+- `pilot/*/` task dirs hold accepted state, transition logs, frozen SPECs,
+  and evidence. Do not modify them.
+- The `handoff/` package is a library: evaluate / append / replay / render
+  / verify / verify_closeout. The World visualization reads this
+  authoritative state; it never decides it.
+- Nothing merges, admits, or advances without an explicit owner order.
+  No Stage 3. No signatures. No autonomous retry.
