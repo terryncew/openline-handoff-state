@@ -1,0 +1,29 @@
+{
+ "accept": 18,
+ "audited_main": "30349b77a154c44a0d8b076b45bff49f826cd5bc",
+ "claim_changing_deltas": [
+  "pilot/02-csv2json/handoff-transition.jsonl seq 1",
+  "pilot/03-wordfreq/handoff-transition.jsonl seq 1",
+  "pilot/04-toposort/handoff-transition.jsonl seq 1",
+  "pilot/05-dedup/handoff-transition.jsonl seq 1",
+  "pilot/05R-dedup/handoff-transition.jsonl seq 1",
+  "pilot/06-pctdecode/handoff-transition.jsonl seq 1",
+  "pilot/07-stats/handoff-transition.jsonl seq 1",
+  "pilot/08-intervals/handoff-transition.jsonl seq 1",
+  "pilot/09-closeout-verifier/handoff-transition.jsonl seq 1"
+ ],
+ "claim_changing_note": "all seq-1 genesis records (prior is None); no post-genesis claim mutation exists in committed history",
+ "evaluator": "0.1.1",
+ "experiment": "CLAIM-EVOLUTION-001",
+ "explicit_reevaluations": {
+  "real_handoff_08_path_b_rejection": "reject, failures == ADMISSION_FAILURES, claim check passes, state unchanged (identical under repaired grammar)",
+  "real_handoff_09_repaired_proposal": "empty admission -> REJECT no advance; hypothetical exact-owner -> ACCEPT, new claim present, old claim recoverable, replay clean; candidate sha256:ec3703a78372cd61be5d8318b44cf26901a86aa601df5bb677ee719961d968b0",
+  "real_handoff_09_seq1": "accept, replay clean (covered by repository audit)"
+ },
+ "logs": 9,
+ "mismatches": [],
+ "quarantine": 0,
+ "records": 18,
+ "reject": 0,
+ "result": "PASS"
+}
