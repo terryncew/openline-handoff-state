@@ -9,6 +9,9 @@ from .render import render
 GENESIS = "0" * 64
 STATE_SCHEMA = "openline.handoff-state.v0.1"
 TRANSITION_SCHEMA = "openline.handoff-transition.v0.1"
+# Evaluator version. The state/transition schemas are unchanged by
+# CLAIM-EVOLUTION-001; only the claim-transition rule in evaluate() changed.
+EVALUATOR_VERSION = "0.1.1"
 STATE_FIELDS = {
     "schema", "task_id", "goal", "authority_owner", "current_state",
     "frozen_invariants", "verified_facts", "claims", "open_questions",
@@ -131,6 +134,60 @@ def _literal_conflict(state):
     return False
 
 
+def _claim_transition_ok(prior, candidate, delta, complete, identity_ok):
+    """Explicit claim-evolution lane (CLAIM-EVOLUTION-001).
+
+    Unchanged claims keep existing behavior (pass). A changed claim is
+    accepted only when ALL of the following hold:
+      - the delta carries an explicit from/to compare-and-replace for
+        "claims" whose "from" matches the prior claims exactly;
+      - the replacement is a non-empty list of well-formed entries
+        (nonblank claim, basis, ceiling);
+      - the transition has a complete exact-owner admission;
+      - verified_facts strictly extend the prior's (prefix preserved) and
+        every newly added fact carries nonblank evidence.
+    The evidence rule is the mechanically defined bound: a replacement
+    claim must ride with new evidence, and its ceiling must be nonblank
+    (an unbounded claim is a broadening). Anything else fails, which maps
+    to quarantine via the semantic set — never silent acceptance, and an
+    unadmitted or wrong-owner mutation additionally fails the non-semantic
+    admission checks, mapping to reject.
+    """
+    if same(prior["claims"], candidate["claims"]):
+        return True
+    op = delta.get("claims")
+    if not isinstance(op, dict) or set(op) != {"from", "to"}:
+        return False
+    if not same(op["from"], prior["claims"]):
+        return False
+    new_claims = op["to"]
+    if not same(new_claims, candidate["claims"]):
+        return False
+    if not isinstance(new_claims, list) or not new_claims:
+        return False
+    for entry in new_claims:
+        if not isinstance(entry, dict):
+            return False
+        if not nonblank(entry.get("claim")):
+            return False
+        if not nonblank(entry.get("basis")):
+            return False
+        if not nonblank(entry.get("ceiling")):
+            return False
+    if not (complete and identity_ok):
+        return False
+    prior_facts = prior["verified_facts"]
+    candidate_facts = candidate["verified_facts"]
+    if not (isinstance(candidate_facts, list)
+            and len(candidate_facts) > len(prior_facts)
+            and _prefix(prior_facts, candidate_facts)):
+        return False
+    for item in candidate_facts[len(prior_facts):]:
+        if not isinstance(item, dict) or not nonblank(item.get("evidence")):
+            return False
+    return True
+
+
 def evaluate(prior, delta, admission, *, seq=1, semantic_conflict=False):
     """Return {state, transition}; failures never advance canonical state.
 
@@ -209,7 +266,8 @@ def evaluate(prior, delta, admission, *, seq=1, semantic_conflict=False):
         check("new canonical term without admission",
               not new_terms or (complete and identity_ok))
         check("claim exceeds cited experiment",
-              prior is None or same(prior["claims"], candidate["claims"]))
+              prior is None or _claim_transition_ok(
+                  prior, candidate, delta, complete, identity_ok))
         check("omitted negative result",
               prior is None or _prefix(prior["failed_or_superseded_paths"],
                                        candidate["failed_or_superseded_paths"]))
