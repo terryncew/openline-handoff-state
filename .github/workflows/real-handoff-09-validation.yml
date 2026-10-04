@@ -1,0 +1,20 @@
+name: REAL-HANDOFF-09 completion proposal preflight
+on:
+  push:
+    branches: [validation/real-handoff-09-completion-preflight]
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Canonical proposal, receipt and hypothetical replay checks
+        run: python pilot/09-closeout-verifier/evidence/execution/completion-preflight.py
