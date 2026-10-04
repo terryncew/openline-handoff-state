@@ -1,0 +1,29 @@
+....FF
+======================================================================
+FAIL: test_no_trailing_newline (test_dedup.DedupTest.test_no_trailing_newline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hatch/workspace/handoff-state-001/pilot/05-dedup/tests/test_dedup.py", line 45, in test_no_trailing_newline
+    self.assertEqual(out, "a\nb\n")
+AssertionError: 'a\nb\na' != 'a\nb\n'
+  a
+  b
+- a
++ 
+
+
+======================================================================
+FAIL: test_single_line_no_newline (test_dedup.DedupTest.test_single_line_no_newline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hatch/workspace/handoff-state-001/pilot/05-dedup/tests/test_dedup.py", line 50, in test_single_line_no_newline
+    self.assertEqual(out, "hello\n")
+AssertionError: 'hello' != 'hello\n'
+  hello
++ 
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.181s
+
+FAILED (failures=2)
