@@ -1,0 +1,28 @@
+{
+  "accepted_seq": 1,
+  "accepted_state_and_history_bytes_unchanged": true,
+  "ci_evidence_sha256": "0feb80befa8d216d034d48d70c37bbf41b2d5f2389721f08093fb7ba794b0a71",
+  "ci_head_sha": "a981dc89c36ebcccebf989e622e981db5fedd454",
+  "ci_run_url": "https://github.com/terryncew/openline-handoff-state/actions/runs/37179243071",
+  "evaluator_version": "0.1.1",
+  "hypothetical_only": true,
+  "hypothetical_result": "accept",
+  "hypothetical_resulting_state_hash": "sha256:1ebad6ba6589ee58595fd78aabbe4f9212b3e95fe5c1143a7b927ddca94ae5ba",
+  "hypothetical_temporary_replay_passed": true,
+  "hypothetical_verify_record_passed": true,
+  "passed": true,
+  "prior_state_hash": "sha256:10a1bc1f1434afa833b1f8667bd95537d8271b030e66e14a223f82ffebd4be9a",
+  "proposed_seq": 2,
+  "starting_ref": "4b655c310c9cb8601a8d5de9f459b1cb45393a25",
+  "unadmitted_result": "reject",
+  "unadmitted_state_and_hash_unchanged": true,
+  "unadmitted_temporary_replay_passed": true,
+  "unadmitted_verify_record_passed": true,
+  "execution": {
+    "run_id": 37179515007,
+    "job_id": 111369038204,
+    "head_sha": "9c5c6a78ea0567d94a194d505a2cae36f042d484",
+    "result": "success",
+    "run_url": "https://github.com/terryncew/openline-handoff-state/actions/runs/37179515007"
+  }
+}

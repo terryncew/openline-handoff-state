@@ -1,0 +1,257 @@
+{
+  "accepted_seq": 1,
+  "accepted_state_hash": "sha256:10a1bc1f1434afa833b1f8667bd95537d8271b030e66e14a223f82ffebd4be9a",
+  "all_starting_blobs_unchanged": 140,
+  "canonical_library_pass": true,
+  "cases": {
+    "isolated_real_fixture": {
+      "exit": 0,
+      "report": {
+        "authority_owner": "Terrynce White",
+        "candidate_ref": "75064a1d4f9a25af92d9da67e42a76ae0a056bc3",
+        "checks_run": [
+          "history-preserved",
+          "history-extends",
+          "first-new-record",
+          "chain-replay",
+          "final-hash",
+          "protected-files",
+          "allowlist"
+        ],
+        "failures": [],
+        "file_checks": "passed",
+        "frozen_ref": "e2c3157293b680b3b1daeaf21e5e9de6abdd5e12",
+        "passed": true,
+        "task_dir": "pilot/08-intervals"
+      },
+      "stderr": ""
+    },
+    "malformed_allowlist": {
+      "exit": 2,
+      "report": null,
+      "stderr": "error: allowlist path is not repository-relative: '../forbidden.txt'\n"
+    },
+    "malformed_ref": {
+      "exit": 2,
+      "report": null,
+      "stderr": "error: git rev-parse --verify --quiet bad ref^{commit} failed: \n"
+    },
+    "protected_mutation": {
+      "exit": 1,
+      "report": {
+        "authority_owner": "Terrynce White",
+        "candidate_ref": "fb6368f80ded5ed5ec4f428c5b3828e8d321267e",
+        "checks_run": [
+          "history-preserved",
+          "history-extends",
+          "first-new-record",
+          "chain-replay",
+          "final-hash",
+          "protected-files",
+          "allowlist"
+        ],
+        "failures": [
+          {
+            "check": "protected-files",
+            "detail": "protected bytes changed: pilot/08-intervals/SPEC.md"
+          }
+        ],
+        "file_checks": "failed",
+        "frozen_ref": "e2c3157293b680b3b1daeaf21e5e9de6abdd5e12",
+        "passed": false,
+        "task_dir": "pilot/08-intervals"
+      },
+      "stderr": ""
+    },
+    "real08_cli_pass": {
+      "exit": 0,
+      "report": {
+        "authority_owner": "Terrynce White",
+        "candidate_ref": "bd58f07fdad7076783f3dffaa28ca1fa1b4060a0",
+        "checks_run": [
+          "history-preserved",
+          "history-extends",
+          "first-new-record",
+          "chain-replay",
+          "final-hash",
+          "protected-files",
+          "allowlist"
+        ],
+        "failures": [],
+        "file_checks": "passed",
+        "frozen_ref": "c45b3c611ecb496d6facc62643f0d685fe039f2a",
+        "passed": true,
+        "task_dir": "pilot/08-intervals"
+      },
+      "stderr": ""
+    },
+    "unlisted_addition": {
+      "exit": 1,
+      "report": {
+        "authority_owner": "Terrynce White",
+        "candidate_ref": "bce0f75f76eed326ef75e663e69d00acfc4a5642",
+        "checks_run": [
+          "history-preserved",
+          "history-extends",
+          "first-new-record",
+          "chain-replay",
+          "final-hash",
+          "protected-files",
+          "allowlist"
+        ],
+        "failures": [
+          {
+            "check": "allowlist",
+            "detail": "unlisted new file: pilot/08-intervals/evidence/execution/unlisted-independent.txt"
+          }
+        ],
+        "file_checks": "failed",
+        "frozen_ref": "e2c3157293b680b3b1daeaf21e5e9de6abdd5e12",
+        "passed": false,
+        "task_dir": "pilot/08-intervals"
+      },
+      "stderr": ""
+    },
+    "unresolvable_ref": {
+      "exit": 2,
+      "report": null,
+      "stderr": "error: git rev-parse --verify --quiet deadbeefdeadbeefdeadbeefdeadbeefdeadbeef^{commit} failed: \n"
+    },
+    "without_evidence_allowances": {
+      "exit": 1,
+      "report": {
+        "authority_owner": "Terrynce White",
+        "candidate_ref": "bd58f07fdad7076783f3dffaa28ca1fa1b4060a0",
+        "checks_run": [
+          "history-preserved",
+          "history-extends",
+          "first-new-record",
+          "chain-replay",
+          "final-hash",
+          "protected-files",
+          "allowlist"
+        ],
+        "failures": [
+          {
+            "check": "allowlist",
+            "detail": "unlisted new file: pilot/08-intervals/evidence/execution/canonical-python-preflight.txt"
+          },
+          {
+            "check": "allowlist",
+            "detail": "unlisted new file: pilot/08-intervals/evidence/execution/closeout-ci-record.md"
+          }
+        ],
+        "file_checks": "failed",
+        "frozen_ref": "c45b3c611ecb496d6facc62643f0d685fe039f2a",
+        "passed": false,
+        "task_dir": "pilot/08-intervals"
+      },
+      "stderr": ""
+    },
+    "without_implementation_allowance": {
+      "exit": 1,
+      "report": {
+        "authority_owner": "Terrynce White",
+        "candidate_ref": "bd58f07fdad7076783f3dffaa28ca1fa1b4060a0",
+        "checks_run": [
+          "history-preserved",
+          "history-extends",
+          "first-new-record",
+          "chain-replay",
+          "final-hash",
+          "protected-files",
+          "allowlist"
+        ],
+        "failures": [
+          {
+            "check": "protected-files",
+            "detail": "protected bytes changed: pilot/08-intervals/intervals.py"
+          }
+        ],
+        "file_checks": "failed",
+        "frozen_ref": "c45b3c611ecb496d6facc62643f0d685fe039f2a",
+        "passed": false,
+        "task_dir": "pilot/08-intervals"
+      },
+      "stderr": ""
+    },
+    "wrong_owner": {
+      "exit": 1,
+      "report": {
+        "authority_owner": "Someone Else",
+        "candidate_ref": "bd58f07fdad7076783f3dffaa28ca1fa1b4060a0",
+        "checks_run": [
+          "history-preserved",
+          "history-extends",
+          "first-new-record",
+          "chain-replay",
+          "final-hash",
+          "protected-files",
+          "allowlist"
+        ],
+        "failures": [
+          {
+            "check": "first-new-record",
+            "detail": "admission does not identify 'Someone Else' exactly: missing/incorrect owner admission"
+          }
+        ],
+        "file_checks": "passed",
+        "frozen_ref": "c45b3c611ecb496d6facc62643f0d685fe039f2a",
+        "passed": false,
+        "task_dir": "pilot/08-intervals"
+      },
+      "stderr": ""
+    }
+  },
+  "evaluator_version": "0.1.1",
+  "historical_replay": {
+    "pilot/02-csv2json/handoff-transition.jsonl": {
+      "seq": 2,
+      "state_hash": "sha256:022f8d9898f13038e35f6412815baa650e9e88e66091de9e458894d7d72a4371"
+    },
+    "pilot/03-wordfreq/handoff-transition.jsonl": {
+      "seq": 2,
+      "state_hash": "sha256:9cda855a56833626f250ede2c940da8df7c757fb61e36527ca9d4f36845693ab"
+    },
+    "pilot/04-toposort/handoff-transition.jsonl": {
+      "seq": 2,
+      "state_hash": "sha256:6ae26989b44b6fdf24362cb87ae5fe2358a5587f30fb7eb614f7a550823edece"
+    },
+    "pilot/05-dedup/handoff-transition.jsonl": {
+      "seq": 1,
+      "state_hash": "sha256:18033310d74c8c0b38fbd9d36df50fd683069bd494ce61a5699126894523e587"
+    },
+    "pilot/05R-dedup/handoff-transition.jsonl": {
+      "seq": 2,
+      "state_hash": "sha256:1aa5d7dc887d5536cea95d71f96a443a78abca3c400f35932b0170177cf4a65e"
+    },
+    "pilot/06-pctdecode/handoff-transition.jsonl": {
+      "seq": 2,
+      "state_hash": "sha256:8ac7192ca55d56e71d433d3b0501ee39c8af3ca2f71314b8c575b5a6fda41da8"
+    },
+    "pilot/07-stats/handoff-transition.jsonl": {
+      "seq": 3,
+      "state_hash": "sha256:a9bde6d2e3f874ed1dc4eded6eb743af4566bfbee6ffe3c7922273feabc222e1"
+    },
+    "pilot/08-intervals/handoff-transition.jsonl": {
+      "seq": 3,
+      "state_hash": "sha256:0055ef4fcd57da17785537c825dfab174a26ef4fb55bcf1d7ab206182e15c06f"
+    },
+    "pilot/09-closeout-verifier/handoff-transition.jsonl": {
+      "seq": 2,
+      "state_hash": "sha256:82589d1e8ffdbfbe811af8c8735a6446b271b02db7ed6f47d27b42268975249d"
+    },
+    "pilot/10-cli/handoff-transition.jsonl": {
+      "seq": 1,
+      "state_hash": "sha256:10a1bc1f1434afa833b1f8667bd95537d8271b030e66e14a223f82ffebd4be9a"
+    }
+  },
+  "implementation_commit": "a981dc89c36ebcccebf989e622e981db5fedd454",
+  "execution": {
+    "run_id": 37179515007,
+    "job_id": 111369038204,
+    "head_sha": "9c5c6a78ea0567d94a194d505a2cae36f042d484",
+    "result": "success",
+    "run_url": "https://github.com/terryncew/openline-handoff-state/actions/runs/37179515007"
+  }
+}
