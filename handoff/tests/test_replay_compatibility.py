@@ -1,9 +1,10 @@
 """Repository-wide historical replay compatibility audit.
 
-Proves evaluator 0.1.1 changes only the newly authorized claim-evolution
-lane: every committed handoff-transition.jsonl replays byte-semantically
-identically under the repaired evaluator (same disposition, check names/
-values, resulting hash, rendered prose, accepted state at each step).
+Proves evaluator 0.1.2 changes only the newly authorized lanes
+(claim-evolution, question-resolution): every committed
+handoff-transition.jsonl replays byte-semantically identically under the
+repaired evaluator (same disposition, check names/values, resulting hash,
+rendered prose, accepted state at each step).
 
 Runs in CI on every PR touching the repo. Uses git to enumerate committed
 logs; skips if git is unavailable.
@@ -92,6 +93,39 @@ class ReplayCompatibilityTest(unittest.TestCase):
                         self.assertEqual(
                             rec["admission"].get("by"), state["authority_owner"],
                             f"{log_path} seq {rec['seq']}: claim delta admission "
+                            f"is not by the exact authority owner")
+                    reported_conflict = any(
+                        item == {"check": "semantic conflict", "pass": False}
+                        for item in rec["validation"]["checks"])
+                    out = evaluate(state, rec["proposed_delta"], rec["admission"],
+                                   seq=rec["seq"], semantic_conflict=reported_conflict)
+                    state = out["state"]
+
+    def test_post_genesis_question_deltas_are_lane_authorized(self):
+        """v0.1.2 added the explicit question-resolution lane. Every
+        committed post-genesis open_questions delta must be lane-authorized:
+        the record is accepted, and the admission names the prior state's
+        authority owner exactly. (The replay test above already proves
+        identical re-evaluation, and the lane accepts only complete
+        exact-owner admissions with evidence-backed extensions.) An
+        unadmitted or non-accept question mutation in history would
+        indicate smuggling or reinterpretation.
+        """
+        logs = [p for p in git("ls-tree", "-r", "--name-only", "HEAD").decode().split()
+                if p.endswith("handoff-transition.jsonl")]
+        for log_path in logs:
+            with self.subTest(log=log_path):
+                text = git("show", f"HEAD:{log_path}").decode()
+                records = [loads(l) for l in text.splitlines() if l.strip()]
+                state = None
+                for rec in records:
+                    if rec["seq"] > 1 and "open_questions" in rec["proposed_delta"]:
+                        self.assertEqual(
+                            rec["validation"]["result"], "accept",
+                            f"{log_path} seq {rec['seq']}: question delta is not an accepted record")
+                        self.assertEqual(
+                            rec["admission"].get("by"), state["authority_owner"],
+                            f"{log_path} seq {rec['seq']}: question delta admission "
                             f"is not by the exact authority owner")
                     reported_conflict = any(
                         item == {"check": "semantic conflict", "pass": False}

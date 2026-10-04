@@ -70,7 +70,7 @@ def check_result(transition, name):
 
 class ClaimEvolutionTest(unittest.TestCase):
     def test_evaluator_version(self):
-        self.assertEqual(EVALUATOR_VERSION, "0.1.1")
+        self.assertEqual(EVALUATOR_VERSION, "0.1.2")
 
     def test_unchanged_claims_existing_behavior(self):
         prior = make_state()

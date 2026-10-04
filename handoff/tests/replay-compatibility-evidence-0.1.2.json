@@ -1,0 +1,14 @@
+{
+ "accept": 20,
+ "audited_main": "4b655c310c9cb8601a8d5de9f459b1cb45393a25",
+ "evaluator": "0.1.2",
+ "experiment": "QUESTION-LIFECYCLE-001",
+ "logs": 10,
+ "mismatches": 0,
+ "post_genesis_question_deltas": [],
+ "quarantine": 0,
+ "question_delta_note": "no post-genesis open_questions mutation/removal exists in committed history",
+ "records": 20,
+ "reject": 0,
+ "result": "BACKWARD_REPLAY_COMPATIBILITY: PASS"
+}
