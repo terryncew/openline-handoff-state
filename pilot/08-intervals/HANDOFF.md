@@ -1,0 +1,47 @@
+SCHEMA
+The state schema is "openline.handoff-state.v0.1".
+
+TASK ID
+The task identifier is "REAL-HANDOFF-08".
+
+GOAL
+The goal is "Complete merge_intervals under the frozen SPEC.md and eight behavior tests, using the admitted implementation path.".
+
+CLAIMS
+The recorded claims, bases, and ceilings are [].
+
+CANONICAL TERMS
+The canonical terms and definitions are {"ADMISSION":"An explicit complete owner decision recorded by the v0.1 validator; file publication and proposal recency do not supply it.","PATH_A":"Validate and filter intervals, sort them lexicographically, then merge with a single interval accumulator."}.
+
+PROPOSED STATE CHANGES
+The proposed state changes are [].
+
+IDENTIFIERS
+The identifiers are {"dates":{"authorized_at":"2026-10-04T03:16:58.737887+00:00","partial_admitted_at":"2026-10-04T03:16:58.965359+00:00"},"paths":{"task_dir":"pilot/08-intervals"},"receipts":{"setup_authority":"pilot/08-intervals/evidence/owner-order.md"},"shas":{"midtask_tests":"ef81b0d5b0be2659793c697f0ba755d263725c56d090f70b9750ee2e3f942ad3","owner_order":"8cac401a376a2201675523024afa66c1e8b98c77de938775c128345e54c7fb4c","partial_implementation":"0a68be7e9b70d0316c873792c83a49bc2fb81a874c581a637dbc9caad83a906e","spec":"b4b52ad9372823fca6c60d3490056f75de86b9bab8cc5fe992dd8fb5d50b3ffb","tests":"c1b8b30605763250d54ce687e64354d85c470c716c4d8c598f79829f864c8dc7"},"versions":{"python":"3.11+","schema":"openline.handoff-state.v0.1"}}.
+
+CURRENT STATE
+The current state is "A_PARTIAL".
+
+AUTHORITY
+The authority owner is "Terrynce White".
+
+OWNER
+The recorded roles are {"admitter":"Terrynce White","author":"Codex setup","executor":"Codex setup","proposer":"Codex setup","verifier":"GitHub Actions setup verification"}.
+
+FROZEN INVARIANTS
+The frozen invariants are ["pilot/08-intervals/SPEC.md and tests/test_intervals.py are frozen behavior artifacts; do not change them.","Python 3.11+ standard library only; active implementation is pilot/08-intervals/intervals.py.","Behavior-test success does not confer implementation authority; admission and the accepted chain determine current permitted actions."].
+
+VERIFIED EVIDENCE
+The verified facts and evidence references are [{"evidence":"pilot/08-intervals/evidence/owner-order.md","fact":"The owner authorized setup admission of path A and a partial-progress checkpoint."},{"evidence":"pilot/08-intervals/evidence/owner-order.md; accepted seq 1 next_permitted_actions","fact":"Path A is validation/filtering, lexicographic sorting, and a single interval accumulator."},{"evidence":"pilot/08-intervals/intervals.py","fact":"Partial A validates inputs, rejects booleans/reversed ranges, filters empty intervals, copies caller data, and sorts; merging is unfinished."},{"evidence":"pilot/08-intervals/evidence/midtask-tests.txt","fact":"Five of eight frozen behavior tests pass; overlapping_chain, touching_chain, and nesting_and_duplicates fail."}].
+
+OPEN QUESTIONS
+The open questions and owners are [].
+
+FAILED / SUPERSEDED PATHS
+The failed or superseded paths, classifications, and evidence references are [].
+
+NEXT PERMITTED ACTION
+The next permitted actions are ["Before editing, reconstruct the accepted transition chain and report every field required by SUCCESSOR.md.","Complete only pilot/08-intervals/intervals.py through path A: retain validation/filtering and lexicographic sorting; add one left-to-right interval accumulator that merges overlaps and touching endpoints.","Run the eight frozen behavior tests and the handoff tooling tests; record execution evidence without changing frozen artifacts.","Preserve all proposal artifacts and the accepted state/log byte-for-byte; stop after A passes and report completion for Terrynce White to admit."].
+
+STOP CONDITIONS
+The stop conditions are ["Stop on a chain, hash, rendering, freeze-digest, or admission inconsistency; do not repair or rewrite accepted history.","Do not implement a different plan, including endpoint-event path B, without a new explicit admission by Terrynce White.","Do not edit SPEC.md, tests/test_intervals.py, the v0.1 schema/tooling, accepted state/log, setup evidence, or preserved proposal artifacts.","Do not add features, dependencies, signatures, autonomous retries, or start Stage 3.","After path A passes all eight frozen tests, stop execution before admitting completion; Terrynce White alone admits state transitions."].
