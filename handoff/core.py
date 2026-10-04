@@ -10,8 +10,9 @@ GENESIS = "0" * 64
 STATE_SCHEMA = "openline.handoff-state.v0.1"
 TRANSITION_SCHEMA = "openline.handoff-transition.v0.1"
 # Evaluator version. The state/transition schemas are unchanged by
-# CLAIM-EVOLUTION-001; only the claim-transition rule in evaluate() changed.
-EVALUATOR_VERSION = "0.1.1"
+# CLAIM-EVOLUTION-001 and QUESTION-LIFECYCLE-001; only the transition
+# rules in evaluate() changed.
+EVALUATOR_VERSION = "0.1.2"
 STATE_FIELDS = {
     "schema", "task_id", "goal", "authority_owner", "current_state",
     "frozen_invariants", "verified_facts", "claims", "open_questions",
@@ -188,6 +189,74 @@ def _claim_transition_ok(prior, candidate, delta, complete, identity_ok):
     return True
 
 
+def _question_transition_ok(prior, candidate, delta, admission, complete,
+                            identity_ok):
+    """Explicit question-resolution lane (QUESTION-LIFECYCLE-001).
+
+    Unchanged or append-only open_questions keep existing behavior (pass).
+    A removal from open_questions is accepted only when ALL hold:
+      - the delta carries an explicit from/to compare-and-replace for
+        "open_questions" whose "from" matches the prior list exactly;
+      - the "to" value is produced only by removing one or more exact
+        prior question objects: every element of "to" exactly matches a
+        prior element (same()), in original relative order, with no
+        mutated text/owner and no added elements;
+      - the transition has a complete exact-owner admission, and every
+        removed question is owned by the exact admitting principal;
+      - verified_facts strictly extend the prior's (prefix preserved) and
+        every newly added fact carries nonblank evidence (at least one new
+        fact: a resolution must ride with evidence).
+    Anything else fails. This check is not in the semantic set: failure
+    maps to reject, never silent acceptance, and an unadmitted or
+    wrong-owner removal additionally fails the non-semantic admission
+    checks.
+    """
+    prior_q = prior["open_questions"]
+    cand_q = candidate["open_questions"]
+    if _prefix(prior_q, cand_q):
+        return True
+    op = delta.get("open_questions")
+    if not isinstance(op, dict) or set(op) != {"from", "to"}:
+        return False
+    if not same(op["from"], prior_q):
+        return False
+    new_q = op["to"]
+    if not same(new_q, cand_q):
+        return False
+    if not isinstance(new_q, list) or len(new_q) >= len(prior_q):
+        return False
+    # Order-preserving exact matching: every element of "to" must consume
+    # a same() prior element in order. Mutation, reorder, or smuggled
+    # additions cannot match.
+    remaining = list(prior_q)
+    for item in new_q:
+        for i, prev in enumerate(remaining):
+            if same(item, prev):
+                del remaining[i]
+                break
+        else:
+            return False
+    removed = remaining
+    if not removed:
+        return False
+    if not (complete and identity_ok):
+        return False
+    principal = admission.get("by") if isinstance(admission, dict) else None
+    if any(not isinstance(q, dict) or q.get("owner") != principal
+           for q in removed):
+        return False
+    prior_facts = prior["verified_facts"]
+    candidate_facts = candidate["verified_facts"]
+    if not (isinstance(candidate_facts, list)
+            and len(candidate_facts) > len(prior_facts)
+            and _prefix(prior_facts, candidate_facts)):
+        return False
+    for item in candidate_facts[len(prior_facts):]:
+        if not isinstance(item, dict) or not nonblank(item.get("evidence")):
+            return False
+    return True
+
+
 def evaluate(prior, delta, admission, *, seq=1, semantic_conflict=False):
     """Return {state, transition}; failures never advance canonical state.
 
@@ -281,7 +350,11 @@ def evaluate(prior, delta, admission, *, seq=1, semantic_conflict=False):
         check("accepted evidence and questions preserved",
               prior is None or (
                   _prefix(prior["verified_facts"], candidate["verified_facts"])
-                  and _prefix(prior["open_questions"], candidate["open_questions"])))
+                  and (_prefix(prior["open_questions"],
+                               candidate["open_questions"])
+                       or _question_transition_ok(
+                           prior, candidate, delta, admission,
+                           complete, identity_ok))))
     failed = {item["check"] for item in checks if not item["pass"]}
     semantic = {"semantic conflict", "claim exceeds cited experiment"}
     disposition = ("reject" if failed - semantic else
