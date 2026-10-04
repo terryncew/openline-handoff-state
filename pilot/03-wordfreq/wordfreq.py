@@ -1,19 +1,16 @@
-"""wordfreq: text on stdin -> word counts as JSON on stdout. Spec: SPEC.md (frozen).
-
-MID-TASK STATE: basic counting, case folding, and empty input work.
-Punctuation-aware tokenization and count-ordered output NOT implemented:
-whitespace split only, first-seen key order.
-"""
+"""wordfreq: text on stdin -> word counts as JSON on stdout. Spec: SPEC.md (frozen)."""
 import json
+import re
 import sys
 from collections import Counter
 
 
 def main():
     text = sys.stdin.read().lower()
-    words = [word for word in text.split() if word]
+    words = re.findall(r"[a-z0-9]+", text)
     counts = Counter(words)
-    sys.stdout.write(json.dumps(dict(counts)))
+    ordered = dict(sorted(counts.items(), key=lambda item: (-item[1], item[0])))
+    sys.stdout.write(json.dumps(ordered))
     return 0
 
 
