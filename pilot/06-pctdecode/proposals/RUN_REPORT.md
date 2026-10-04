@@ -90,7 +90,7 @@ Information obtained outside committed repository artifacts:
 - Actions run/job/step status and all infrastructure, environment, runtime, checkout, diagnostic, timing, and execution information in the two raw logs retained as evidence/successor-verification-job.log and evidence/completion-preflight-job.log. No linked external documentation in those logs was opened.
 - Independent subagent audit findings derived exclusively from pinned committed artifacts and the generated successor/verification files. No outside task knowledge was supplied or requested.
 
-No prior chat context, PR description, issue discussion, external task source, or user clarification was inspected or required. Every extra-context request: NONE. No user information or approval request was made.
+No prior chat context, PR description, issue discussion, external task source, or user clarification was inspected or required. Requests to the user or outside sources for task information: NONE. No user information or approval request was made. One internal audit agent requested the report path after querying an incorrect repository path (404); it was redirected to the already specified pilot/06-pctdecode/proposals/RUN_REPORT.md, a generated committed artifact. No outside task content was supplied.
 
 Proposed Handoff State v0.1 completion delta:
 
