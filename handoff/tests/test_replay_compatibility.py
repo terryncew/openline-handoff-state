@@ -67,19 +67,38 @@ class ReplayCompatibilityTest(unittest.TestCase):
         self.assertGreater(counts["records"], 0)
         self.assertGreater(counts["accept"], 0)
 
-    def test_no_post_genesis_claim_mutation_in_history(self):
-        """The 0.1.1 lane is new: no committed record may already depend on it."""
+    def test_post_genesis_claim_deltas_are_lane_authorized(self):
+        """v0.1.1 added the explicit claim-evolution lane; REAL-HANDOFF-09
+        seq 2 is its first legitimate use. Every committed post-genesis
+        claim delta must be lane-authorized: the record is accepted, and
+        the admission names the prior state's authority owner exactly.
+        (The replay test above already proves identical re-evaluation,
+        and the lane accepts only complete exact-owner admissions with
+        evidence-backed extensions.) An unadmitted or non-accept claim
+        mutation in history would indicate smuggling or reinterpretation.
+        """
         logs = [p for p in git("ls-tree", "-r", "--name-only", "HEAD").decode().split()
                 if p.endswith("handoff-transition.jsonl")]
         for log_path in logs:
             with self.subTest(log=log_path):
                 text = git("show", f"HEAD:{log_path}").decode()
                 records = [loads(l) for l in text.splitlines() if l.strip()]
+                state = None
                 for rec in records:
-                    if rec["seq"] == 1:
-                        continue  # genesis establishes claims; prior is None
-                    self.assertNotIn("claims", rec["proposed_delta"],
-                                     f"{log_path} seq {rec['seq']}: post-genesis claim delta")
+                    if rec["seq"] > 1 and "claims" in rec["proposed_delta"]:
+                        self.assertEqual(
+                            rec["validation"]["result"], "accept",
+                            f"{log_path} seq {rec['seq']}: claim delta is not an accepted record")
+                        self.assertEqual(
+                            rec["admission"].get("by"), state["authority_owner"],
+                            f"{log_path} seq {rec['seq']}: claim delta admission "
+                            f"is not by the exact authority owner")
+                    reported_conflict = any(
+                        item == {"check": "semantic conflict", "pass": False}
+                        for item in rec["validation"]["checks"])
+                    out = evaluate(state, rec["proposed_delta"], rec["admission"],
+                                   seq=rec["seq"], semantic_conflict=reported_conflict)
+                    state = out["state"]
 
 
 if __name__ == "__main__":
