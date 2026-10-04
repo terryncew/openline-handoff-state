@@ -1,0 +1,44 @@
+name: REAL-HANDOFF-03 isolated validation
+on:
+  push:
+    branches: [codex/real-handoff-03-validation]
+permissions:
+  contents: read
+jobs:
+  frozen-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 543e03e99e124a59e8ed1d17b7528d008ea5329f
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify starting state and protected artifacts
+        run: |
+          test "$(git rev-parse HEAD)" = "543e03e99e124a59e8ed1d17b7528d008ea5329f"
+          test "$(git rev-parse HEAD^{tree})" = "c0c7367445a5bba44eaa0d6a4dd8e6c6936d8839"
+          test "$(git diff --name-only c8f7247652fe8904d2590f7d6be0e01e8825d45a HEAD)" = "pilot/03-wordfreq/wordfreq.py"
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          from handoff.canonical import loads, state_hash
+          expected = {
+              "pilot/03-wordfreq/SPEC.md": "b80ae92e2972fe1dedf76f564c0d53640eec01bea23ef858713e3874ec56ac48",
+              "pilot/03-wordfreq/tests/test_wordfreq.py": "ff70821c24d04c8424f4920d74ef05c20917ab69e82884ff7d0c93b118120825",
+              "pilot/03-wordfreq/evidence/midtask-tests.txt": "4133fd40f18e4002c85fab9ad2f4b92f6372a559827f4f0e8beef7b2d973b064",
+          }
+          for path, sha in expected.items():
+              assert hashlib.sha256(Path(path).read_bytes()).hexdigest() == sha
+              print(path, sha)
+          state = loads(Path("pilot/03-wordfreq/handoff-state.json").read_text(encoding="utf-8"))
+          assert state_hash(state) == "sha256:6fa241081db215d04cd21028333ff60afedbeef3ffd7601eb46b0244e973f9b2"
+          print("accepted_state_hash", state_hash(state))
+          print("implementation_sha256", hashlib.sha256(Path("pilot/03-wordfreq/wordfreq.py").read_bytes()).hexdigest())
+          PY
+      - name: Frozen task acceptance tests
+        run: python -m unittest discover -s pilot/03-wordfreq/tests -v
+      - name: Existing Handoff State suite
+        if: always()
+        run: python -m unittest discover -s handoff/tests -v
