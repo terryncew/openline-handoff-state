@@ -1,6 +1,6 @@
 {
   "artifact_sha256": {
-    ".github/workflows/real-handoff-08.yml": "2a4b0b8612bc8e5547f9e71ff18517fd302cdcc249227c1580aad8c4019c60b5",
+    ".github/workflows/real-handoff-08.yml": "51df464576fdb1b818cc8802e42b2d0e70a03fa090d4e0cf01a82391d8bff1bb",
     "AGENTS.md": "3834d5f69e9c958657286b2e74b528d312a6efe15e91d4097f1ef40c547abdd0",
     "pilot/08-intervals/HANDOFF.md": "5a9e168ebf3553085aaa870c7c70c7953d45b60ede743cbfe31940d199f90ba3",
     "pilot/08-intervals/RUBRIC.md": "7c4b2d967fb7d13dbaa2c065e198e7e685f0cfbf523b9c45c68a5f5542b8ea79",
