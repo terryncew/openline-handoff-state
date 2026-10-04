@@ -1,9 +1,4 @@
-"""csv2json: CSV on stdin -> JSON on stdout. Spec: SPEC.md (frozen).
-
-MID-TASK STATE: happy path implemented (valid rows, empty age -> null,
-empty input, sorted keys, bad header). Malformed-row handling NOT
-implemented: dirty rows raise ValueError instead of going to errors.
-"""
+"""csv2json: CSV on stdin -> JSON on stdout. Spec: SPEC.md (frozen)."""
 import csv
 import json
 import sys
@@ -19,13 +14,26 @@ def main():
         sys.stderr.write("bad header\n")
         return 1
     rows = []
-    for fields in csv.reader(lines[1:]):
-        if not fields or all(field == "" for field in fields):
+    errors = []
+    row_number = 0
+    for raw in lines[1:]:
+        if not raw.strip():
+            continue
+        row_number += 1
+        fields = next(csv.reader([raw]))
+        if len(fields) != 3:
+            errors.append({
+                "row": row_number, "raw": raw, "reason": "wrong column count",
+            })
             continue
         name, age_text, city = fields
-        age = int(age_text) if age_text.strip() else None
+        try:
+            age = int(age_text) if age_text != "" else None
+        except ValueError:
+            errors.append({"row": row_number, "raw": raw, "reason": "bad age"})
+            continue
         rows.append({"name": name, "age": age, "city": city})
-    sys.stdout.write(json.dumps({"rows": rows, "errors": []}, sort_keys=True))
+    sys.stdout.write(json.dumps({"rows": rows, "errors": errors}, sort_keys=True))
     return 0
 
 

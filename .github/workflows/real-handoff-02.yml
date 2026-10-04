@@ -1,0 +1,184 @@
+name: REAL-HANDOFF-02 successor verification
+on:
+  push:
+    branches: [codex/real-handoff-02-successor]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact authoritative commit
+        uses: actions/checkout@v4
+        with:
+          ref: 0bf16caf3d2fdb3b9632844c536b8691ac94a953
+          path: source
+      - name: Check out proposed implementation
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: proposed
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply single implementation change to pinned checkout
+        run: cp proposed/pilot/02-csv2json/csv2json.py source/pilot/02-csv2json/csv2json.py
+      - name: Run all 8 frozen acceptance tests
+        working-directory: source
+        shell: bash
+        run: python -m unittest discover -s pilot/02-csv2json/tests -v 2>&1 | tee pilot/02-csv2json/evidence/successor-tests.txt
+      - name: Run merged Handoff State tests
+        working-directory: source
+        run: python -m unittest discover -s handoff/tests -v
+      - name: Generate and validate proposed delta without append
+        working-directory: source
+        env:
+          SUCCESSOR_COMMIT: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          from copy import deepcopy
+          from datetime import datetime, timezone
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          import tempfile
+          
+          from handoff.canonical import canonical_json, loads, state_hash
+          from handoff.core import apply_delta
+          from handoff.render import render, parse_rendered
+          from handoff.schema import validate_state
+          from handoff.store import replay
+          
+          task = Path("pilot/02-csv2json")
+          prior = loads((task / "handoff-state.json").read_text(encoding="utf-8"))
+          assert replay(task / "handoff-transition.jsonl")["state"] == prior
+          assert render(prior) == (task / "HANDOFF.md").read_text(encoding="utf-8")
+          for key, path in {
+              "spec": task / "SPEC.md",
+              "tests": task / "tests/test_csv2json.py",
+              "input_csv": task / "fixtures/input.csv",
+              "expected_json": task / "fixtures/expected.json",
+              "midtask_tests": task / "evidence/midtask-tests.txt",
+          }.items():
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == prior["identifiers"]["shas"][key]
+          
+          script_sha = hashlib.sha256((task / "csv2json.py").read_bytes()).hexdigest()
+          tests_sha = hashlib.sha256((task / "evidence/successor-tests.txt").read_bytes()).hexdigest()
+          run_url = "https://github.com/terryncew/openline-handoff-state/actions/runs/" + os.environ["GITHUB_RUN_ID"]
+          evidence = f"{task}/evidence/successor-tests.txt sha256:{tests_sha}; {run_url}"
+          delta = {
+              "current_state": {
+                  "from": prior["current_state"],
+                  "to": "COMPLETE_PENDING_ADMISSION",
+              },
+              "verified_facts": {"add": [
+                  {
+                      "fact": "Successor implementation preserves malformed rows in errors with row/raw/reason; invalid ages and wrong column counts no longer abort conversion.",
+                      "evidence": f"{task}/csv2json.py sha256:{script_sha}; " + evidence,
+                  },
+                  {
+                      "fact": "All 8 frozen acceptance tests pass; the historical 5/8 result remains preserved as prior evidence.",
+                      "evidence": evidence,
+                  },
+                  {
+                      "fact": "SPEC.md, acceptance tests, fixtures, canonical accepted state, rendered accepted handoff, and transition log are unchanged from 0bf16caf3d2fdb3b9632844c536b8691ac94a953. No extra task context was needed or requested.",
+                      "evidence": "Exact pinned checkout and preservation assertions in " + run_url + "; successor review of committed artifacts",
+                  },
+              ]},
+              "identifiers.shas": {"add": {
+                  "csv2json_py_completed": script_sha,
+                  "successor_tests": tests_sha,
+                  "successor_base_commit": "0bf16caf3d2fdb3b9632844c536b8691ac94a953",
+              }},
+              "identifiers.paths": {"add": {
+                  "successor_test_evidence": f"{task}/evidence/successor-tests.txt",
+                  "successor_proposal": f"{task}/proposed-next-handoff.json",
+              }},
+              "roles": {
+                  "from": prior["roles"],
+                  "to": dict(prior["roles"], author="Codex", proposer="Codex", verifier="Codex", executor="Codex"),
+              },
+              "next_permitted_actions": {
+                  "from": prior["next_permitted_actions"],
+                  "to": [
+                      "Terrynce White may review and explicitly admit the proposed completion delta.",
+                      "Do not merge; do not change the schema; do not start Stage 3.",
+                  ],
+              },
+          }
+          proposal = {"prior_state": prior, "proposed_delta": delta, "admission": {}}
+          proposal_path = task / "proposed-next-handoff.json"
+          proposal_path.write_text(json.dumps(proposal, sort_keys=True, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+          candidate = apply_delta(prior, delta)
+          assert not validate_state(candidate)
+          for key in ("schema", "task_id", "goal", "authority_owner", "frozen_invariants", "stop_conditions", "open_questions", "claims", "canonical_terms", "failed_or_superseded_paths"):
+              assert candidate[key] == prior[key]
+          assert candidate["verified_facts"][:len(prior["verified_facts"])] == prior["verified_facts"]
+          for group in prior["identifiers"]:
+              for key, value in prior["identifiers"][group].items():
+                  assert candidate["identifiers"][group][key] == value
+          
+          command = ["python", "-m", "handoff", "validate", str(proposal_path)]
+          actual = subprocess.run(command, text=True, capture_output=True, check=False)
+          assert actual.returncode == 2, actual.stderr
+          actual_receipt = loads(actual.stdout)
+          assert actual_receipt["transition"]["validation"]["result"] == "reject"
+          assert actual_receipt["state"] == prior
+          assert actual_receipt["transition"]["resulting_state_hash"] == state_hash(prior)
+          
+          hypothetical = deepcopy(proposal)
+          hypothetical["admission"] = {
+              "decision": "admit",
+              "by": prior["authority_owner"],
+              "at": datetime.now(timezone.utc).isoformat(),
+              "evidence": "HYPOTHETICAL owner admission for mechanical preflight only; not an actual admission, authorization, or accepted transition.",
+          }
+          with tempfile.TemporaryDirectory() as directory:
+              hypothetical_path = Path(directory) / "hypothetical-owner-admission.json"
+              hypothetical_path.write_text(canonical_json(hypothetical), encoding="utf-8")
+              conditional = subprocess.run(["python", "-m", "handoff", "validate", str(hypothetical_path)], text=True, capture_output=True, check=False)
+          assert conditional.returncode == 0, conditional.stderr
+          conditional_receipt = loads(conditional.stdout)
+          assert conditional_receipt["transition"]["validation"]["result"] == "accept"
+          assert conditional_receipt["state"] == candidate
+          assert all(item["pass"] for item in conditional_receipt["transition"]["validation"]["checks"])
+          
+          report = {
+              "base_commit": "0bf16caf3d2fdb3b9632844c536b8691ac94a953",
+              "implementation_commit": os.environ["SUCCESSOR_COMMIT"],
+              "run_url": run_url,
+              "no_accepted_state_or_log_mutation": True,
+              "information_missing_from_committed_artifacts": False,
+              "extra_context_requests": [],
+              "actual_proposal": {
+                  "command": " ".join(command),
+                  "exit_code": actual.returncode,
+                  "admission": {},
+                  "validation": actual_receipt["transition"]["validation"],
+                  "prior_state_hash": actual_receipt["transition"]["prior_state_hash"],
+                  "resulting_state_hash": actual_receipt["transition"]["resulting_state_hash"],
+              },
+              "hypothetical_owner_admission_preflight": {
+                  "notice": "Mechanical test only. Terrynce White has not admitted the proposal. No transition was appended.",
+                  "admission": hypothetical["admission"],
+                  "exit_code": conditional.returncode,
+                  "validation": conditional_receipt["transition"]["validation"],
+                  "candidate_state_hash": state_hash(candidate),
+              },
+              "preserved_fields": ["open_questions", "stop_conditions", "frozen_invariants", "claims", "canonical_terms", "failed_or_superseded_paths"],
+          }
+          report_path = task / "evidence/successor-validation.json"
+          report_path.write_text(json.dumps(report, sort_keys=True, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+          prose = render(candidate)
+          assert parse_rendered(prose) == candidate
+          prose_path = task / "HANDOFF.proposed.md"
+          prose_path.write_text(prose, encoding="utf-8")
+          for path in (task / "evidence/successor-tests.txt", proposal_path, report_path, prose_path):
+              print("HANDOFF_ARTIFACT " + str(path) + " " + json.dumps(path.read_text(encoding="utf-8"), ensure_ascii=True))
+          print("ACTUAL_PROPOSAL: reject (exit 2), pending explicit owner admission")
+          print("HYPOTHETICAL_PREFLIGHT: accept (exit 0), all checks pass; no admission recorded")
+          
+          PY
