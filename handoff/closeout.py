@@ -26,17 +26,15 @@ Checks (SPEC.md, pilot/09-closeout-verifier):
     missing/incorrect admission, unadmitted proposal treated as accepted,
     unexpected protected-file changes, final state/hash mismatch
 
-PARTIAL IMPLEMENTATION (2026-10-04): checks 1-5 and the rejection paths
-of 8 are implemented. Checks 6-7 (protected-file byte-identity and the
-explicit allowlist) are scaffolded in the signature but NOT yet enforced:
-frozen_files, candidate_files and allowlist are accepted and recorded,
-not evaluated. See the frozen acceptance tests for the remaining work.
+File permissions come only from the supplied Allowlist. Structural state,
+history, and rendering checks cannot be bypassed by listing those paths.
 """
 from dataclasses import dataclass, field
 
 from handoff.canonical import canonical_json, loads, state_hash
-from handoff.core import apply_delta, verify_record
+from handoff.core import verify_record
 from handoff.render import render
+from handoff.store import _replay_text
 
 
 @dataclass
@@ -57,12 +55,100 @@ class CloseoutVerification:
     passed: bool
     failures: list = field(default_factory=list)
     checks_run: list = field(default_factory=list)
-    # accepted for forward-compatibility; not yet enforced (see module docstring)
-    file_checks: str = "not_implemented"
+    file_checks: str = "not_run"
 
 
 def _fail(failures, check, detail):
     failures.append(CloseoutFailure(check=check, detail=detail))
+
+
+def _repo_path(path):
+    return (isinstance(path, str) and bool(path)
+            and "\\" not in path
+            and all(part not in {"", ".", ".."} for part in path.split("/")))
+
+
+def _verify_files(failures, *, frozen_files, candidate_files, allowlist,
+                  task_dir, frozen_log_text, candidate_log_text,
+                  frozen_head_state, final_state):
+    """Check supplied snapshots; the diff never supplies permissions."""
+    before = len(failures)
+    if not isinstance(frozen_files, dict) or not isinstance(candidate_files, dict):
+        _fail(failures, "protected-files", "both file snapshots are required")
+        return False
+    if not isinstance(allowlist, Allowlist):
+        _fail(failures, "allowlist", "an explicit Allowlist is required")
+        return False
+    if not _repo_path(task_dir):
+        _fail(failures, "allowlist", "task_dir must be a repository-relative path")
+        return False
+    for label, files in (("frozen", frozen_files), ("candidate", candidate_files)):
+        if any(not _repo_path(path) or not isinstance(data, bytes)
+               for path, data in files.items()):
+            _fail(failures, "protected-files",
+                  label + " snapshot must map repository-relative paths to bytes")
+            return False
+
+    state_path = task_dir + "/handoff-state.json"
+    log_path = task_dir + "/handoff-transition.jsonl"
+    prose_path = task_dir + "/HANDOFF.md"
+    structural = {state_path, log_path, prose_path}
+    implementation = allowlist.implementation_changed
+    evidence = allowlist.evidence_added
+    for paths in (implementation, evidence):
+        if not isinstance(paths, list) or any(not _repo_path(path) for path in paths):
+            _fail(failures, "allowlist", "allowlist entries must be explicit file paths")
+            return False
+    implementation, evidence = set(implementation), set(evidence)
+    if (implementation & evidence) or ((implementation | evidence) & structural):
+        _fail(failures, "allowlist", "allowlist categories must be disjoint from structural files")
+    for path in sorted(implementation):
+        if path not in frozen_files or path not in candidate_files:
+            _fail(failures, "allowlist",
+                  "implementation_changed requires an existing, retained file: " + path)
+    for path in sorted(evidence):
+        if path in frozen_files:
+            _fail(failures, "allowlist", "evidence_added cannot rewrite an existing file: " + path)
+
+    for path, data in frozen_files.items():
+        if path not in candidate_files:
+            _fail(failures, "protected-files", "frozen file deleted: " + path)
+        elif path not in structural | implementation and candidate_files[path] != data:
+            _fail(failures, "protected-files", "protected bytes changed: " + path)
+    for path in sorted(candidate_files.keys() - frozen_files.keys()):
+        if path not in evidence:
+            _fail(failures, "allowlist", "unlisted new file: " + path)
+
+    for label, files, log_text, expected_state in (
+            ("frozen", frozen_files, frozen_log_text, frozen_head_state),
+            ("candidate", candidate_files, candidate_log_text, final_state)):
+        missing = structural - files.keys()
+        if missing:
+            _fail(failures, "allowlist",
+                  label + " structural files missing: " + ", ".join(sorted(missing)))
+            continue
+        try:
+            if files[log_path] != log_text.encode("utf-8"):
+                _fail(failures, "allowlist", label + " log file differs from supplied history")
+            document = loads(files[state_path].decode("utf-8"))
+            if expected_state is None or canonical_json(document) != canonical_json(expected_state):
+                _fail(failures, "allowlist", label + " state file differs from replayed state")
+            if expected_state is not None and files[prose_path] != render(expected_state).encode("utf-8"):
+                _fail(failures, "allowlist", label + " HANDOFF.md differs from canonical rendering")
+        except (ValueError, UnicodeError) as exc:
+            _fail(failures, "allowlist", label + " structural files invalid: " + str(exc))
+
+    if log_path in frozen_files and log_path in candidate_files:
+        if not candidate_files[log_path].startswith(frozen_files[log_path]):
+            _fail(failures, "protected-files", "frozen log byte prefix changed")
+    try:
+        frozen_receipt = _replay_text(frozen_log_text)
+        if (frozen_receipt is None
+                or canonical_json(frozen_receipt["state"]) != canonical_json(frozen_head_state)):
+            _fail(failures, "protected-files", "frozen head differs from canonical replay")
+    except (ValueError, TypeError, KeyError) as exc:
+        _fail(failures, "protected-files", "frozen history cannot replay: " + str(exc))
+    return len(failures) == before
 
 
 def verify_closeout(*, frozen_log_text, candidate_log_text,
@@ -75,16 +161,16 @@ def verify_closeout(*, frozen_log_text, candidate_log_text,
     frozen_log_text / candidate_log_text: raw handoff-transition.jsonl text.
     frozen_head_state: parsed accepted state at the frozen head.
     candidate_state: parsed candidate handoff-state.json.
-    frozen_files / candidate_files: repo-relative path -> bytes (checks 6-7;
-        accepted but not yet enforced).
-    allowlist: explicit Allowlist (checks 6-7; accepted but not yet enforced).
+    frozen_files / candidate_files: complete snapshots, repo-relative path -> bytes.
+    allowlist: required explicit Allowlist; implementation changes and new evidence.
+        Existing files cannot be deleted; evidence_added cannot rewrite history.
     authority_owner: exact expected admission owner.
     """
     failures = []
     checks_run = []
 
-    frozen_lines = [l for l in frozen_log_text.splitlines() if l.strip()]
-    candidate_lines = [l for l in candidate_log_text.splitlines() if l.strip()]
+    frozen_lines = [l for l in frozen_log_text.split("\n") if l.strip()]
+    candidate_lines = [l for l in candidate_log_text.split("\n") if l.strip()]
 
     # Check 1: frozen history preserved byte-for-byte, same order.
     checks_run.append("history-preserved")
@@ -105,8 +191,14 @@ def verify_closeout(*, frozen_log_text, candidate_log_text,
         _fail(failures, "history-extends",
               "candidate history does not extend the frozen history")
 
-    frozen_records = [loads(l) for l in frozen_lines]
-    candidate_records = [loads(l) for l in candidate_lines]
+    try:
+        frozen_records = [loads(l) for l in frozen_lines]
+        candidate_records = [loads(l) for l in candidate_lines]
+        if any(not isinstance(rec, dict) for rec in frozen_records + candidate_records):
+            raise ValueError("transition records must be JSON objects")
+    except ValueError as exc:
+        _fail(failures, "chain-replay", "invalid history: " + str(exc))
+        return CloseoutVerification(False, failures, checks_run, "failed")
     n = len(frozen_records)
     frozen_head_hash = state_hash(frozen_head_state)
 
@@ -122,9 +214,9 @@ def verify_closeout(*, frozen_log_text, candidate_log_text,
             _fail(failures, "first-new-record",
                   "prior_state_hash is not the frozen head hash: wrong prior hash")
         admission = rec.get("admission") or {}
-        if admission.get("by") != authority_owner:
+        if not isinstance(admission, dict) or admission.get("by") != authority_owner:
             _fail(failures, "first-new-record",
-                  f"admission owner {admission.get('by')!r} != {authority_owner!r}: "
+                  f"admission does not identify {authority_owner!r} exactly: "
                   "missing/incorrect owner admission")
         record_errors = verify_record(frozen_head_state, rec)
         if record_errors:
@@ -138,19 +230,14 @@ def verify_closeout(*, frozen_log_text, candidate_log_text,
     checks_run.append("chain-replay")
     state = None
     replay_ok = True
-    for rec in candidate_records:
-        errors = verify_record(state, rec)
-        if errors:
-            _fail(failures, "chain-replay",
-                  f"seq {rec.get('seq')}: " + "; ".join(errors))
-            replay_ok = False
-            break
-        try:
-            state = apply_delta(state, rec["proposed_delta"])
-        except (ValueError, TypeError, KeyError) as exc:
-            _fail(failures, "chain-replay", f"seq {rec.get('seq')}: cannot apply delta: {exc}")
-            replay_ok = False
-            break
+    try:
+        receipt = _replay_text(candidate_log_text)
+        state = receipt["state"] if receipt is not None else None
+        if any(rec["validation"]["result"] != "accept" for rec in candidate_records):
+            _fail(failures, "chain-replay", "accepted history contains a non-accepted record")
+    except (ValueError, TypeError, KeyError) as exc:
+        _fail(failures, "chain-replay", "canonical v0.1 replay failed: " + str(exc))
+        replay_ok = False
 
     # Check 5: final hash agreement.
     checks_run.append("final-hash")
@@ -165,13 +252,19 @@ def verify_closeout(*, frozen_log_text, candidate_log_text,
             _fail(failures, "final-hash",
                   "replayed final hash != candidate state document hash: final state/hash mismatch")
 
-    # Checks 6-7: protected files and explicit allowlist — NOT YET ENFORCED.
+    # Checks 6-7: byte identity and permissions supplied independently of the diff.
     checks_run.append("protected-files")
     checks_run.append("allowlist")
+    files_ok = _verify_files(
+        failures, frozen_files=frozen_files, candidate_files=candidate_files,
+        allowlist=allowlist, task_dir=task_dir,
+        frozen_log_text=frozen_log_text, candidate_log_text=candidate_log_text,
+        frozen_head_state=frozen_head_state, final_state=state if replay_ok else None,
+    )
 
     return CloseoutVerification(
         passed=not failures,
         failures=failures,
         checks_run=checks_run,
-        file_checks="not_implemented",
+        file_checks="passed" if files_ok else "failed",
     )

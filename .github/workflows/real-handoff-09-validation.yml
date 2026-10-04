@@ -1,0 +1,24 @@
+name: REAL-HANDOFF-09 isolated verification
+on:
+  push:
+    branches: [validation/real-handoff-09-clean-successor]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Frozen REAL-HANDOFF-09 acceptance
+        run: python -m unittest discover -s pilot/09-closeout-verifier/tests -v
+      - name: Existing Handoff State suite
+        run: python -m unittest discover -s handoff/tests -v
+      - name: Independent verification and protected apparatus identity
+        run: python pilot/09-closeout-verifier/evidence/execution/independent-checks.py
